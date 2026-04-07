@@ -544,7 +544,7 @@
     .product-panel { align-items: center; justify-content: center; }
 
     .product-glass {
-      background: var(--glass-panel-bg);
+      background: transparent;
       border: 1px solid var(--glass-panel-border);
       border-radius: 24px;
       padding: 44px 52px;
@@ -585,12 +585,9 @@
     }
 
     .product-glass:hover {
-      background: var(--glass-panel-hover);
+      background: transparent;
       border-color: var(--glass-panel-border-hover);
       transform: translateY(-2px);
-      box-shadow: 0 0 0 0.5px var(--glass-rim-inner),
-                  0 20px 60px var(--glass-drop-shadow-hover),
-                  inset 0 0.5px 0 0 var(--glass-rim-top-hover);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -837,7 +834,6 @@
 
     <!-- 3: ENGINES — HUMBLEFLOW + BASHER -->
     <section class="panel product-panel">
-      <div class="glow glow-center"></div>
       <div class="panel-inner">
         <div class="product-glass">
           <div class="layer-label">Layer 0 &mdash; Engines</div>
@@ -855,7 +851,6 @@
 
     <!-- 4: INTELLIGENCE — MOHMAYA ECOSYSTEM -->
     <section class="panel product-panel">
-      <div class="glow glow-center"></div>
       <div class="panel-inner">
         <div class="product-glass">
           <div class="layer-label">Layer 1&ndash;2 &mdash; Intelligence &amp; Studio</div>
@@ -888,7 +883,6 @@
 
     <!-- 5: MUSIC — COMPOSR + STRUCODE + SONIC-PI-WEB -->
     <section class="panel product-panel">
-      <div class="glow glow-center"></div>
       <div class="panel-inner">
         <div class="product-glass">
           <div class="layer-label">Creative Tools &mdash; Music</div>
@@ -917,7 +911,6 @@
 
     <!-- 6: REASONING — ANVI + CLAUDE SWARMS + AI TOOLS -->
     <section class="panel product-panel">
-      <div class="glow glow-center"></div>
       <div class="panel-inner">
         <div class="product-glass">
           <div class="layer-label">Creative Tools &mdash; AI</div>
@@ -946,7 +939,6 @@
 
     <!-- 7: HUMAN — PRACTICE ARENA -->
     <section class="panel product-panel">
-      <div class="glow glow-center"></div>
       <div class="panel-inner">
         <div class="product-glass">
           <div class="layer-label">Human Tools</div>
@@ -964,7 +956,6 @@
 
     <!-- 8: VERTICALS — HELIFLIGHT + PROTOCOL -->
     <section class="panel product-panel">
-      <div class="glow glow-center"></div>
       <div class="panel-inner">
         <div class="product-glass">
           <div class="layer-label">Verticals &amp; Protocol</div>
@@ -986,7 +977,6 @@
 
     <!-- 9: RESEARCH -->
     <section class="panel product-panel">
-      <div class="glow glow-center"></div>
       <div class="panel-inner">
         <div class="product-glass">
           <div class="layer-label">Research</div>
@@ -1056,6 +1046,10 @@
       let lastWheelTime = 0;
       const WHEEL_COOLDOWN = 800;
       const LERP = 0.075;
+      let currentScale = 1;
+      let targetScale = 1;
+      const SCALE_LERP = 0.04; // slow ease for zoom
+      const ZOOM_OUT = 0.88; // how far to zoom out during transition
 
       panels.forEach((_, i) => {
         const dot = document.createElement('button');
@@ -1068,15 +1062,29 @@
 
       function animate() {
         const dx = targetX - currentX;
-        if (Math.abs(dx) > 0.5) {
+        const isScrolling = Math.abs(dx) > 0.5;
+
+        if (isScrolling) {
           currentX += dx * LERP;
           window._scrollSettled = false;
+          targetScale = ZOOM_OUT; // zoom out while moving
         } else {
           currentX = targetX;
           window._scrollSettled = true;
+          targetScale = 1; // zoom back in when settled
         }
-        track.style.transform = `translateX(${-currentX}px)`;
-        const maxScroll = (total - 1) * window.innerWidth;
+
+        // Smooth scale lerp
+        currentScale += (targetScale - currentScale) * SCALE_LERP;
+
+        // Apply transform from center of viewport
+        const vw = window.innerWidth, vh = window.innerHeight;
+        const ox = currentX + vw / 2; // transform origin in track coords
+        const oy = vh / 2;
+        track.style.transformOrigin = `${ox}px ${oy}px`;
+        track.style.transform = `translateX(${-currentX}px) scale(${currentScale})`;
+
+        const maxScroll = (total - 1) * vw;
         progress.style.width = (maxScroll > 0 ? (currentX / maxScroll) * 100 : 0) + '%';
         requestAnimationFrame(animate);
       }
@@ -1089,7 +1097,8 @@
 
         if (instant) {
           currentX = targetX;
-          track.style.transform = `translateX(${-currentX}px)`;
+          currentScale = 1;
+          track.style.transform = `translateX(${-currentX}px) scale(1)`;
         }
 
         counter.textContent = index + 1;
@@ -1142,7 +1151,8 @@
       window.addEventListener('resize', () => {
         targetX = currentIndex * window.innerWidth;
         currentX = targetX;
-        track.style.transform = `translateX(${-currentX}px)`;
+        currentScale = 1;
+        track.style.transform = `translateX(${-currentX}px) scale(1)`;
       });
 
       // Theme toggle
@@ -1443,15 +1453,13 @@
       }
 
       function drawCardTerrain() {
-        const settled = window._scrollSettled;
-        // Only warp when hovering a glass card AND scroll has settled
-        const hovering = activeCardRect && settled;
-        const cr = hovering ? activeCardRect : null;
+        const settled = window._scrollSettled !== false; // default true
+        const cr = (activeCardRect && settled) ? activeCardRect : null;
 
         if (cr) {
-          panelWarp += (1 - panelWarp) * 0.04; // ease in
+          panelWarp += (1 - panelWarp) * 0.04;
         } else {
-          panelWarp += (0 - panelWarp) * 0.06; // ease out naturally
+          panelWarp += (0 - panelWarp) * 0.06;
         }
 
         if (panelWarp < 0.01 && !lastPanelRect) return;
@@ -1466,13 +1474,13 @@
         const rect = cr || lastPanelRect;
         if (!rect) return;
 
-        if (!lastPanelRect || Math.abs(lastPanelRect.x - rect.x) > 2 || Math.abs(lastPanelRect.y - rect.y) > 2) {
+        if (!lastPanelRect || Math.abs(lastPanelRect.x - rect.x) > 10 || Math.abs(lastPanelRect.y - rect.y) > 10) {
           drawTerrain();
         }
         lastPanelRect = { ...rect };
 
         const wa = panelWarp;
-        const PAD = 20;
+        const PAD = 60;
         const BR = 24;
         const rx = rect.x - PAD, ry = rect.y - PAD;
         const rw = rect.w + PAD * 2, rh = rect.h + PAD * 2;
@@ -1498,40 +1506,75 @@
           return gl > 0.001 ? { nx: gx / gl, ny: gy / gl } : { nx: 0, ny: 0 };
         }
 
-        // Warp: map terrain inside the card to follow the card's shape
-        // Inside: height = terrain at the boundary point + SDF-based offset
-        //   This creates concentric contour rings that follow the rounded rect
-        // Outside: pull samples inward toward boundary
+        // Geometric nearest point on rounded rect boundary
+        // More reliable than SDF gradient projection, especially deep inside
         const halfMin = Math.min(rect.w, rect.h) / 2;
+        const rcx = rect.x + rect.w / 2, rcy = rect.y + rect.h / 2;
+
+        function nearestEdge(px, py) {
+          // Clamp to inner rect (shrunk by border radius)
+          const innerL = rect.x + BR, innerR = rect.x + rect.w - BR;
+          const innerT = rect.y + BR, innerB = rect.y + rect.h - BR;
+          // Nearest point on the inner rect (for corner rounding)
+          const cx = Math.max(innerL, Math.min(px, innerR));
+          const cy = Math.max(innerT, Math.min(py, innerB));
+          const dx = px - cx, dy = py - cy;
+          const dl = Math.sqrt(dx * dx + dy * dy);
+
+          if (dl < 0.001) {
+            // Point is inside the inner rect — project to nearest straight edge
+            const toL = px - rect.x, toR = rect.x + rect.w - px;
+            const toT = py - rect.y, toB = rect.y + rect.h - py;
+            const minD = Math.min(toL, toR, toT, toB);
+            if (minD === toL) return { ex: rect.x, ey: py };
+            if (minD === toR) return { ex: rect.x + rect.w, ey: py };
+            if (minD === toT) return { ex: px, ey: rect.y };
+            return { ex: px, ey: rect.y + rect.h };
+          }
+
+          // Project outward from the clamped inner point by BR
+          const nx = dx / dl, ny = dy / dl;
+          return { ex: cx + nx * BR, ey: cy + ny * BR };
+        }
+
+        // Average terrain height at card boundary — single value, uniform for all edges
+        // Sampled once per frame, not per point
+        let edgeHAvg = 0;
+        {
+          const samples = 16;
+          let sum = 0;
+          for (let i = 0; i < samples; i++) {
+            const angle = (i / samples) * Math.PI * 2;
+            // Sample around the card perimeter
+            const px = rcx + Math.cos(angle) * (rect.w / 2);
+            const py = rcy + Math.sin(angle) * (rect.h / 2);
+            sum += terrainH(px, py);
+          }
+          edgeHAvg = sum / samples;
+        }
 
         function warpedH(px, py) {
           const d = sdf(px, py);
           if (d > PAD) return terrainH(px, py);
 
-          const { nx, ny } = sdfGrad(px, py);
-          // Nearest boundary point
-          const ex = px - nx * d;
-          const ey = py - ny * d;
-
           if (d < 0) {
-            // INSIDE — read terrain at boundary, then add SDF-based height offset
-            // so contour lines become concentric rings of the card shape
-            const edgeH = terrainH(ex, ey);
-            // Normalized depth: 0 at edge, 1 at center
+            // INSIDE — height is pure function of SDF distance
+            // This guarantees contour lines = iso-SDF lines = concentric rounded rects
+            //
+            // Map SDF depth to height: at edge (d=0) = edgeHAvg, sweeps through
+            // contour levels as depth increases. Using uniform edgeHAvg ensures
+            // rings are at the same depth on ALL sides of the card.
             const depthNorm = Math.min(1, Math.abs(d) / halfMin);
-            // Height offset: creates concentric bands by scaling SDF into height space
-            // Uses the actual SDF distance to create rings at each contour level
-            const sdfOffset = (Math.abs(d) / halfMin) * 0.12; // maps depth to height range
-            const blended = edgeH + sdfOffset;
+            const ringH = edgeHAvg + depthNorm * 0.18; // spans 6 contour levels
 
-            // Blend between real terrain and card-shaped terrain based on warp amount
             const baseH = terrainH(px, py);
-            return baseH * (1 - wa) + blended * wa;
+            return baseH * (1 - wa) + ringH * wa;
           } else {
-            // OUTSIDE — pull sample inward toward boundary
+            // OUTSIDE — pull sample toward nearest edge point
+            const { ex, ey } = nearestEdge(px, py);
             const t = d / PAD;
             const smooth = 1 - t * t * (3 - 2 * t);
-            const pull = smooth * wa * 0.9;
+            const pull = smooth * wa;
             const sx = px + (ex - px) * pull;
             const sy = py + (ey - py) * pull;
             return terrainH(sx, sy);

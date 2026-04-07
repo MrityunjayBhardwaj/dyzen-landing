@@ -1,0 +1,2650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dyzen</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #060606;
+      --panel-bg: transparent;
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-hover: rgba(255, 255, 255, 0.09);
+      --text-primary: rgba(255, 255, 255, 0.92);
+      --text-secondary: rgba(255, 255, 255, 0.50);
+      --text-tertiary: rgba(255, 255, 255, 0.28);
+      --separator: rgba(255, 255, 255, 0.04);
+      --separator-hover: rgba(255, 255, 255, 0.2);
+      --sub-border: rgba(255, 255, 255, 0.04);
+      --sub-hover-border: rgba(255, 255, 255, 0.1);
+      --sub-hover-bg: rgba(255, 255, 255, 0.02);
+      --tag-border: rgba(255, 255, 255, 0.06);
+      --tag-hover-border: rgba(255, 255, 255, 0.12);
+      --glass-top-line: rgba(255, 255, 255, 0.08);
+      --glow-color: #fff;
+      --grain-opacity: 0.025;
+      --progress-bg: rgba(255, 255, 255, 0.15);
+      --counter-sep: rgba(255, 255, 255, 0.12);
+      --kbd-border: rgba(255, 255, 255, 0.1);
+      --shadow-hover: rgba(0, 0, 0, 0.3);
+      --glass-panel-bg: rgba(255, 255, 255, 0.04);
+      --glass-panel-hover: rgba(255, 255, 255, 0.07);
+      --glass-panel-border: rgba(255, 255, 255, 0.08);
+      --glass-panel-border-hover: rgba(255, 255, 255, 0.14);
+      --glass-rim-top: rgba(255, 255, 255, 0.12);
+      --glass-rim-top-hover: rgba(255, 255, 255, 0.18);
+      --glass-rim-inner: rgba(255, 255, 255, 0.05);
+      --glass-brightness: 1.05;
+      --glass-drop-shadow: rgba(0, 0, 0, 0.25);
+      --glass-drop-shadow-hover: rgba(0, 0, 0, 0.4);
+      --glass-noise-opacity: 0.035;
+      --glass-specular: rgba(255, 255, 255, 0.12);
+      --glass-specular-hover: rgba(255, 255, 255, 0.18);
+      --glass-inner-shadow: rgba(255, 255, 255, 0.03);
+      --glass-hover-border: rgba(255, 255, 255, 0.14);
+      --terrain-opacity: 0.6;
+      --terrain-stroke: 255, 255, 255;
+      --boids-opacity: 0.35;
+      --boids-color: 255, 255, 255;
+      --grad-a: rgba(60, 60, 120, 0.08);
+      --grad-b: rgba(100, 40, 80, 0.06);
+      --grad-c: rgba(40, 80, 100, 0.06);
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html.light {
+      --bg: #f5f5f3;
+      --panel-bg: rgba(0, 0, 0, 0.8);
+      --glass-bg: rgba(0, 0, 0, 0.03);
+      --glass-border: rgba(0, 0, 0, 0.06);
+      --glass-hover: rgba(0, 0, 0, 0.05);
+      --text-primary: rgba(0, 0, 0, 0.88);
+      --text-secondary: rgba(0, 0, 0, 0.50);
+      --text-tertiary: rgba(0, 0, 0, 0.28);
+      --separator: rgba(0, 0, 0, 0.05);
+      --separator-hover: rgba(0, 0, 0, 0.15);
+      --sub-border: rgba(0, 0, 0, 0.05);
+      --sub-hover-border: rgba(0, 0, 0, 0.1);
+      --sub-hover-bg: rgba(0, 0, 0, 0.02);
+      --tag-border: rgba(0, 0, 0, 0.06);
+      --tag-hover-border: rgba(0, 0, 0, 0.12);
+      --glass-top-line: rgba(0, 0, 0, 0.04);
+      --glow-color: rgba(0, 0, 0, 0.4);
+      --grain-opacity: 0.015;
+      --progress-bg: rgba(0, 0, 0, 0.1);
+      --counter-sep: rgba(0, 0, 0, 0.1);
+      --kbd-border: rgba(0, 0, 0, 0.1);
+      --shadow-hover: rgba(0, 0, 0, 0.06);
+      --glass-panel-bg: rgba(255, 255, 255, 0.25);
+      --glass-panel-hover: rgba(255, 255, 255, 0.32);
+      --glass-panel-border: rgba(255, 255, 255, 0.35);
+      --glass-panel-border-hover: rgba(255, 255, 255, 0.5);
+      --glass-rim-top: rgba(255, 255, 255, 0.5);
+      --glass-rim-top-hover: rgba(255, 255, 255, 0.7);
+      --glass-rim-inner: rgba(255, 255, 255, 0.15);
+      --glass-brightness: 1.15;
+      --glass-drop-shadow: rgba(0, 0, 0, 0.06);
+      --glass-drop-shadow-hover: rgba(0, 0, 0, 0.1);
+      --glass-noise-opacity: 0.02;
+      --glass-specular: rgba(255, 255, 255, 0.6);
+      --glass-specular-hover: rgba(255, 255, 255, 0.8);
+      --glass-inner-shadow: rgba(0, 0, 0, 0.03);
+      --glass-hover-border: rgba(0, 0, 0, 0.1);
+      --terrain-opacity: 0.5;
+      --terrain-stroke: 0, 0, 0;
+      --boids-opacity: 0.18;
+      --boids-color: 0, 0, 0;
+      --grad-a: rgba(180, 160, 220, 0.12);
+      --grad-b: rgba(220, 180, 200, 0.10);
+      --grad-c: rgba(160, 200, 220, 0.10);
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      cursor: default;
+      user-select: none;
+      transition: background 0.6s var(--ease-out-expo), color 0.6s var(--ease-out-expo);
+    }
+
+    /* Animated gradient background */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at 20% 50%, var(--grad-a) 0%, transparent 50%),
+                  radial-gradient(ellipse at 80% 20%, var(--grad-b) 0%, transparent 50%),
+                  radial-gradient(ellipse at 50% 80%, var(--grad-c) 0%, transparent 50%);
+      animation: gradient-drift 20s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes gradient-drift {
+      0% { transform: translate(0%, 0%) rotate(0deg); }
+      33% { transform: translate(2%, -3%) rotate(3deg); }
+      66% { transform: translate(-2%, 2%) rotate(-2deg); }
+      100% { transform: translate(1%, -1%) rotate(1deg); }
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      opacity: var(--grain-opacity);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    #terrain {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: var(--terrain-opacity);
+      transition: opacity 0.6s var(--ease-out-expo);
+    }
+
+    #ocean {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: var(--terrain-opacity);
+      transition: opacity 0.6s var(--ease-out-expo);
+    }
+
+    #world {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: var(--boids-opacity);
+      transition: opacity 0.6s var(--ease-out-expo);
+    }
+
+    .track {
+      position: fixed;
+      inset: 0;
+      will-change: transform;
+      display: flex;
+      align-items: stretch;
+      z-index: 1;
+    }
+
+    .panel {
+      min-width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      padding: 40px 60px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .panel-inner {
+      opacity: 0;
+      transform: translateX(80px) scale(0.97);
+      transition: opacity 0.9s var(--ease-out-expo),
+                  transform 1.1s var(--ease-out-expo);
+      will-change: opacity, transform;
+    }
+
+    .panel.visible .panel-inner {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+
+    .panel.exiting .panel-inner {
+      opacity: 0;
+      transform: translateX(-60px) scale(0.97);
+    }
+
+    .stagger > * {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s var(--ease-out-expo),
+                  transform 0.7s var(--ease-out-expo);
+    }
+
+    .panel.visible .stagger > *:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.12s; }
+    .panel.visible .stagger > *:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.18s; }
+    .panel.visible .stagger > *:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.24s; }
+    .panel.visible .stagger > *:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.30s; }
+    .panel.visible .stagger > *:nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 0.36s; }
+    .panel.visible .stagger > *:nth-child(6) { opacity: 1; transform: translateY(0); transition-delay: 0.42s; }
+    .panel.visible .stagger > *:nth-child(7) { opacity: 1; transform: translateY(0); transition-delay: 0.48s; }
+    .panel.visible .stagger > *:nth-child(8) { opacity: 1; transform: translateY(0); transition-delay: 0.54s; }
+    .panel.visible .stagger > *:nth-child(9) { opacity: 1; transform: translateY(0); transition-delay: 0.60s; }
+
+    /* ===== PROGRESS ===== */
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 1px;
+      background: var(--progress-bg);
+      width: 0%;
+      z-index: 200;
+      transition: width 0.1s linear;
+    }
+
+    /* ===== FIXED UI ===== */
+    .logo {
+      position: fixed;
+      top: 36px;
+      left: 44px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: var(--text-secondary);
+      z-index: 200;
+      text-transform: uppercase;
+    }
+
+    .panel-counter {
+      position: fixed;
+      top: 36px;
+      right: 44px;
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+      z-index: 200;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .nav {
+      position: fixed;
+      right: 44px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 200;
+    }
+
+    .nav-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--text-tertiary);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.5s var(--ease-out-expo);
+    }
+
+    .nav-dot.active {
+      background: var(--text-primary);
+      height: 20px;
+      border-radius: 3px;
+    }
+
+    .nav-dot:hover:not(.active) {
+      background: var(--text-secondary);
+      transform: scale(1.5);
+    }
+
+    .scroll-hint {
+      position: fixed;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-tertiary);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      z-index: 200;
+      transition: opacity 0.8s var(--ease-out-expo);
+    }
+
+    .scroll-hint.hidden { opacity: 0; pointer-events: none; }
+
+    .scroll-hint-arrow {
+      width: 32px;
+      height: 1px;
+      background: var(--text-tertiary);
+      position: relative;
+      animation: hint-slide 2.4s var(--ease-out-expo) infinite;
+    }
+
+    .scroll-hint-arrow::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: -3px;
+      width: 7px;
+      height: 7px;
+      border-right: 1px solid var(--text-tertiary);
+      border-top: 1px solid var(--text-tertiary);
+      transform: rotate(45deg);
+    }
+
+    @keyframes hint-slide {
+      0%, 100% { transform: translateX(0); opacity: 0.4; }
+      50% { transform: translateX(8px); opacity: 0.8; }
+    }
+
+    .key-hint {
+      position: fixed;
+      bottom: 36px;
+      right: 44px;
+      font-size: 10px;
+      color: var(--text-tertiary);
+      z-index: 200;
+      opacity: 0.4;
+    }
+
+    .key-hint kbd {
+      display: inline-block;
+      border: 1px solid var(--kbd-border);
+      border-radius: 3px;
+      padding: 2px 6px;
+      font-family: inherit;
+      font-size: 10px;
+      margin: 0 1px;
+    }
+
+    .view-source {
+      position: fixed;
+      bottom: 36px;
+      left: 44px;
+      z-index: 200;
+    }
+
+    .view-source a {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      opacity: 0.4;
+      transition: opacity 0.4s ease;
+    }
+
+    .view-source a:hover { opacity: 0.8; }
+
+    .counter-sep { color: var(--counter-sep); }
+
+    /* Theme toggle */
+    .theme-toggle {
+      position: fixed;
+      top: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+      background: none;
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.5s var(--ease-out-expo);
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--sub-hover-border);
+      background: var(--glass-bg);
+    }
+
+    .theme-toggle svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--text-tertiary);
+      fill: none;
+      stroke-width: 1.5;
+      transition: all 0.5s var(--ease-out-expo);
+    }
+
+    .theme-toggle:hover svg { stroke: var(--text-secondary); }
+
+    .theme-toggle .icon-sun { display: none; }
+    .theme-toggle .icon-moon { display: block; }
+    html.light .theme-toggle .icon-sun { display: block; }
+    html.light .theme-toggle .icon-moon { display: none; }
+
+    /* Smooth theme transition on all themed elements */
+    .product-glass, .sub-item, .product-tag, .nav-dot,
+    .question-row, .hero-quote, .product-headline, .product-body,
+    .product-name, .section-label, .footer-line, .footer-name,
+    .logo, .panel-counter, .scroll-hint, .key-hint, .layer-label,
+    .sub-item-name, .sub-item-desc, .q-text, .q-name, .hero-sub {
+      transition: color 0.6s var(--ease-out-expo),
+                  background 0.6s var(--ease-out-expo),
+                  border-color 0.6s var(--ease-out-expo);
+    }
+
+    /* ===== HERO ===== */
+    .hero-quote {
+      font-size: clamp(26px, 3.6vw, 52px);
+      font-weight: 300;
+      line-height: 1.35;
+      text-align: center;
+      max-width: 820px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-em { font-style: italic; color: var(--text-secondary); }
+
+    .hero-sub {
+      margin-top: 40px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    /* ===== QUESTION LIST ===== */
+    .question-list {
+      display: flex;
+      flex-direction: column;
+      max-width: 700px;
+      width: 100%;
+    }
+
+    .question-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--separator);
+      cursor: pointer;
+      transition: all 0.5s var(--ease-out-expo);
+      position: relative;
+    }
+
+    .question-row::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 0%;
+      height: 1px;
+      background: var(--separator-hover);
+      transition: width 0.6s var(--ease-out-expo);
+    }
+
+    .question-row:hover::after { width: 100%; }
+    .question-row:hover { padding-left: 12px; }
+    .question-row:hover .q-text { color: var(--text-primary); }
+    .question-row:hover .q-name { color: var(--text-secondary); }
+    .question-row:hover .q-arrow { opacity: 1; transform: translateX(0); }
+
+    .q-text {
+      font-size: clamp(14px, 1.6vw, 19px);
+      font-weight: 300;
+      color: var(--text-secondary);
+      transition: all 0.5s var(--ease-out-expo);
+    }
+
+    .q-right { display: flex; align-items: center; gap: 12px; }
+
+    .q-name {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+      transition: all 0.5s var(--ease-out-expo);
+      text-transform: uppercase;
+    }
+
+    .q-arrow {
+      width: 14px;
+      height: 14px;
+      stroke: var(--text-tertiary);
+      fill: none;
+      stroke-width: 1.5;
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: all 0.5s var(--ease-out-expo);
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 48px;
+    }
+
+    /* ===== PRODUCT PANELS ===== */
+    .product-panel { align-items: center; justify-content: center; }
+
+    .product-glass {
+      background: var(--glass-panel-bg);
+      border: 1px solid var(--glass-panel-border);
+      border-radius: 24px;
+      padding: 44px 52px;
+      backdrop-filter: blur(16px) saturate(1.15) brightness(var(--glass-brightness));
+      -webkit-backdrop-filter: blur(16px) saturate(1.15) brightness(var(--glass-brightness));
+      max-width: 700px;
+      width: 100%;
+      transition: all 0.6s var(--ease-out-expo);
+      position: relative;
+      box-shadow: 0 0 0 0.5px var(--glass-rim-inner),
+                  0 8px 32px var(--glass-drop-shadow),
+                  inset 0 0.5px 0 0 var(--glass-rim-top);
+    }
+
+    /* Top edge catch — light hitting glass edge */
+    .product-glass::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 40px;
+      right: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--glass-rim-top) 30%, var(--glass-rim-top) 70%, transparent);
+      pointer-events: none;
+      border-radius: 24px 24px 0 0;
+    }
+
+    /* Noise texture — frosted grain */
+    .product-glass::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      opacity: var(--glass-noise-opacity);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
+
+    .product-glass:hover {
+      background: var(--glass-panel-hover);
+      border-color: var(--glass-panel-border-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 0 0 0.5px var(--glass-rim-inner),
+                  0 20px 60px var(--glass-drop-shadow-hover),
+                  inset 0 0.5px 0 0 var(--glass-rim-top-hover);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .product-glass { backdrop-filter: none; -webkit-backdrop-filter: none; }
+    }
+
+    .product-name {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 24px;
+    }
+
+    .product-headline {
+      font-size: clamp(20px, 2.4vw, 32px);
+      font-weight: 300;
+      line-height: 1.35;
+      margin-bottom: 24px;
+      letter-spacing: -0.015em;
+    }
+
+    .product-body {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      max-width: 540px;
+    }
+
+    .product-body p + p { margin-top: 12px; }
+
+    .product-tag {
+      display: inline-block;
+      margin-top: 28px;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: var(--text-tertiary);
+      border: 1px solid var(--tag-border);
+      border-radius: 100px;
+      padding: 6px 16px;
+      transition: all 0.5s var(--ease-out-expo);
+      margin-right: 8px;
+    }
+
+    .product-glass:hover .product-tag { border-color: var(--tag-hover-border); }
+
+    /* ===== SUB-PRODUCTS GRID ===== */
+    .sub-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .sub-item {
+      padding: 16px 20px;
+      border: 1px solid var(--sub-border);
+      border-radius: 12px;
+      transition: all 0.5s var(--ease-out-expo);
+      position: relative;
+      background: var(--sub-hover-bg);
+      box-shadow: inset 0 1px 0 0 var(--glass-inner-shadow);
+    }
+
+    .sub-item:hover {
+      border-color: var(--sub-hover-border);
+      background: var(--glass-bg);
+      box-shadow: inset 0 1px 0 0 var(--glass-specular),
+                  0 4px 12px var(--glass-drop-shadow);
+    }
+
+    .sub-item-name {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .sub-item-desc {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--text-tertiary);
+      line-height: 1.5;
+    }
+
+    .sub-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+    /* ===== LAYER LABEL ===== */
+    .layer-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+      opacity: 0.6;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer-content { text-align: center; }
+
+    .footer-line {
+      font-size: clamp(20px, 2.8vw, 36px);
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      letter-spacing: -0.01em;
+    }
+
+    .footer-name {
+      margin-top: 52px;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-tertiary);
+      letter-spacing: 0.1em;
+    }
+
+    .footer-links {
+      margin-top: 20px;
+      display: flex;
+      gap: 28px;
+      justify-content: center;
+    }
+
+    .footer-links a {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.4s var(--ease-out-expo);
+    }
+
+    .footer-links a:hover { color: var(--text-secondary); }
+
+    /* ===== GLOW ===== */
+    .glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(150px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1.5s var(--ease-out-expo);
+    }
+
+    .panel.visible .glow { opacity: 0.035; }
+
+    .glow-tl { width: 500px; height: 500px; background: var(--glow-color); top: -150px; left: -100px; }
+    .glow-br { width: 400px; height: 400px; background: var(--glow-color); bottom: -100px; right: -50px; }
+    .glow-center { width: 600px; height: 600px; background: var(--glow-color); top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .panel { padding: 40px 24px; }
+      .product-glass { padding: 32px 24px; border-radius: 18px; }
+      .sub-grid { grid-template-columns: 1fr; }
+      .sub-grid.cols-3 { grid-template-columns: 1fr; }
+      .question-row { flex-direction: column; gap: 6px; align-items: flex-start; }
+      .q-right { display: none; }
+      .logo { left: 24px; top: 28px; }
+      .panel-counter { right: 24px; top: 28px; }
+      .nav { right: 16px; gap: 8px; }
+      .nav-dot { width: 4px; height: 4px; }
+      .nav-dot.active { height: 16px; }
+      .key-hint { display: none; }
+      .view-source { left: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="terrain"></canvas>
+  <canvas id="ocean"></canvas>
+  <canvas id="world"></canvas>
+  <div class="progress" id="progress"></div>
+  <div class="logo">Dyzen</div>
+  <div class="panel-counter"><span id="counter">1</span><span class="counter-sep"> / </span><span id="total"></span></div>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+  <div class="view-source"><a href="javascript:void(0)" id="viewsrc">view source</a></div>
+  <div class="key-hint"><kbd>&larr;</kbd> <kbd>&rarr;</kbd></div>
+
+  <div class="scroll-hint" id="scrollHint">
+    <span>Scroll</span>
+    <div class="scroll-hint-arrow"></div>
+  </div>
+
+  <nav class="nav" id="nav"></nav>
+
+  <div class="track" id="track">
+
+    <!-- 1: HERO -->
+    <section class="panel visible">
+      <div class="glow glow-center"></div>
+      <div class="panel-inner">
+        <h1 class="hero-quote">If it can't survive a question,<br>it was <span class="hero-em">never</span> an answer.</h1>
+        <p class="hero-sub">Dyzen AI</p>
+      </div>
+    </section>
+
+    <!-- 2: THE THREAD -->
+    <section class="panel">
+      <div class="glow glow-center"></div>
+      <div class="panel-inner">
+        <div class="section-label">The same question, everywhere</div>
+        <div class="question-list stagger">
+          <div class="question-row" data-target="2">
+            <span class="q-text">Can you see inside the engine?</span>
+            <div class="q-right"><span class="q-name">HumbleFlow + Basher</span><svg class="q-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+          <div class="question-row" data-target="3">
+            <span class="q-text">Can you see inside your brand intelligence?</span>
+            <div class="q-right"><span class="q-name">Mohmaya</span><svg class="q-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+          <div class="question-row" data-target="4">
+            <span class="q-text">Can you see inside your music?</span>
+            <div class="q-right"><span class="q-name">Composr</span><svg class="q-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+          <div class="question-row" data-target="5">
+            <span class="q-text">Can you see inside your reasoning?</span>
+            <div class="q-right"><span class="q-name">Anvi</span><svg class="q-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+          <div class="question-row" data-target="6">
+            <span class="q-text">Can you see inside your social fears?</span>
+            <div class="q-right"><span class="q-name">Practice Arena</span><svg class="q-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+          <div class="question-row" data-target="7">
+            <span class="q-text">Can you see inside your operations?</span>
+            <div class="q-right"><span class="q-name">Verticals</span><svg class="q-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+          <div class="question-row" data-target="8">
+            <span class="q-text">Can you see inside intelligence itself?</span>
+            <div class="q-right"><span class="q-name">Prajna-Flow</span><svg class="q-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3: ENGINES — HUMBLEFLOW + BASHER -->
+    <section class="panel product-panel">
+      <div class="glow glow-center"></div>
+      <div class="panel-inner">
+        <div class="product-glass">
+          <div class="layer-label">Layer 0 &mdash; Engines</div>
+          <div class="product-name">HumbleFlow + Basher</div>
+          <h2 class="product-headline">Every output has a proof chain.<br>Every frame is deterministic.</h2>
+          <div class="product-body">
+            <p>HumbleFlow: neurosymbolic reasoning with ASPIC+ argumentation, lattice Datalog, and five-layer LLM grounding. The system says "I don't know" when the knowledge base doesn't cover a query. Every claim carries provenance, epistemic status, and calibrated confidence.</p>
+            <p>Basher: CG + AI rendering with deterministic control. 3D geometry pre-visualization before any AI touches the output. Controlled diffusion. Temporal consistency.</p>
+          </div>
+          <span class="product-tag">52,000+ files</span>
+          <span class="product-tag">Provenance chains</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4: INTELLIGENCE — MOHMAYA ECOSYSTEM -->
+    <section class="panel product-panel">
+      <div class="glow glow-center"></div>
+      <div class="panel-inner">
+        <div class="product-glass">
+          <div class="layer-label">Layer 1&ndash;2 &mdash; Intelligence &amp; Studio</div>
+          <div class="product-name">Mohmaya</div>
+          <h2 class="product-headline">Creative intelligence,<br>not creative guessing.</h2>
+          <div class="product-body">
+            <p>Three-module closed loop: intelligence engine scrapes and analyzes competitive landscape, creative engine renders director-led AI content, optimization engine deploys and measures. Each cycle tighter than the last.</p>
+          </div>
+          <div class="sub-grid">
+            <div class="sub-item">
+              <div class="sub-item-name">Mohmaya Studio</div>
+              <div class="sub-item-desc">AI-native creative consultancy for D2C brands. Cinematic quality with mathematical precision.</div>
+            </div>
+            <div class="sub-item">
+              <div class="sub-item-name">Mohmaya OS</div>
+              <div class="sub-item-desc">Decision-making cockpit. Intelligence to content pipeline with full observability.</div>
+            </div>
+            <div class="sub-item">
+              <div class="sub-item-name">Synaptic Growth</div>
+              <div class="sub-item-desc">Mohmaya OS as SaaS. Same system, packaged for other agencies.</div>
+            </div>
+            <div class="sub-item">
+              <div class="sub-item-name">Nexus</div>
+              <div class="sub-item-desc">AI-powered info arbitrage. Matches buyers with sellers using intelligence automation.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5: MUSIC — COMPOSR + STRUCODE + SONIC-PI-WEB -->
+    <section class="panel product-panel">
+      <div class="glow glow-center"></div>
+      <div class="panel-inner">
+        <div class="product-glass">
+          <div class="layer-label">Creative Tools &mdash; Music</div>
+          <div class="product-name">Composr</div>
+          <h2 class="product-headline">The first music tool where<br>you can debug your music.</h2>
+          <div class="product-body">
+            <p>Every layer inspectable, editable, re-runnable. You hear the bass is wrong. You look at the code. You change the note. You re-render just the bass. Drums, melody, pad don't move.</p>
+          </div>
+          <div class="sub-grid cols-3">
+            <div class="sub-item">
+              <div class="sub-item-name">struCode</div>
+              <div class="sub-item-desc">Monaco-based Strudel editor. Active note highlighting, multi-stem WAV export.</div>
+            </div>
+            <div class="sub-item">
+              <div class="sub-item-name">sonic-pi-web</div>
+              <div class="sub-item-desc">Browser-native Sonic Pi. Ruby DSL to JS with temporal scheduling.</div>
+            </div>
+            <div class="sub-item">
+              <div class="sub-item-name">Full Transparency</div>
+              <div class="sub-item-desc">Quadtree decomposition. Provenance from keystroke to waveform.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6: REASONING — ANVI + CLAUDE SWARMS + AI TOOLS -->
+    <section class="panel product-panel">
+      <div class="glow glow-center"></div>
+      <div class="panel-inner">
+        <div class="product-glass">
+          <div class="layer-label">Creative Tools &mdash; AI</div>
+          <div class="product-name">Anvi</div>
+          <h2 class="product-headline">A cognitive operating system<br>for software engineering.</h2>
+          <div class="product-body">
+            <p>Nine passive checks from Indian epistemology. Four lenses: diagnose, design, review, recover. Growing catalogues of error patterns, invariants, and lifecycles that compound across sessions.</p>
+          </div>
+          <div class="sub-grid">
+            <div class="sub-item">
+              <div class="sub-item-name">Claude Swarms</div>
+              <div class="sub-item-desc">Multi-agent orchestration. Filesystem message passing. Every agent visible, queryable, editable.</div>
+            </div>
+            <div class="sub-item">
+              <div class="sub-item-name">Claude Video Studio</div>
+              <div class="sub-item-desc">Cinematic video in code. Remotion + React Three Fiber. Every frame deterministic.</div>
+            </div>
+            <div class="sub-item">
+              <div class="sub-item-name">Claude Audio Studio</div>
+              <div class="sub-item-desc">AI audio generation with full pipeline transparency.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7: HUMAN — PRACTICE ARENA -->
+    <section class="panel product-panel">
+      <div class="glow glow-center"></div>
+      <div class="panel-inner">
+        <div class="product-glass">
+          <div class="layer-label">Human Tools</div>
+          <div class="product-name">Practice Arena</div>
+          <h2 class="product-headline">We succeed when you<br>stop using this app.</h2>
+          <div class="product-body">
+            <p>A graduated practice space for human connection. AI partners that push back, matched humans who are also practicing, real-world challenges that transfer skills to life.</p>
+            <p>Not a destination. A bridge. The gap between screen and world is growing. This is the bridge nobody built because retention metrics punish products that let people leave.</p>
+          </div>
+          <span class="product-tag">7 domains</span>
+          <span class="product-tag">Graduated difficulty</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8: VERTICALS — HELIFLIGHT + PROTOCOL -->
+    <section class="panel product-panel">
+      <div class="glow glow-center"></div>
+      <div class="panel-inner">
+        <div class="product-glass">
+          <div class="layer-label">Verticals &amp; Protocol</div>
+          <div class="product-name">Applied transparency</div>
+          <h2 class="product-headline">The same principle,<br>wherever opacity costs lives or trust.</h2>
+          <div class="sub-grid">
+            <div class="sub-item">
+              <div class="sub-item-name">HeliFlight Pro</div>
+              <div class="sub-item-desc">Helicopter operations management. DGCA Chapter 16 compliant. Flight plans, PAX manifests, load sheets. Paper to digital, opaque to inspectable.</div>
+            </div>
+            <div class="sub-item">
+              <div class="sub-item-name">HumbleFlow Protocol</div>
+              <div class="sub-item-desc">The endgame. HTTPS for AI trust. Any AI product becomes contestable by implementing the protocol. Open standard. Certification revenue.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9: RESEARCH -->
+    <section class="panel product-panel">
+      <div class="glow glow-center"></div>
+      <div class="panel-inner">
+        <div class="product-glass">
+          <div class="layer-label">Research</div>
+          <div class="product-name">Prajna-Flow</div>
+          <h2 class="product-headline">From absolute awareness to<br>self-cognizing computation.</h2>
+          <div class="product-body">
+            <p>A unified theory connecting metaphysics, epistemology, geometric deep learning, and self-referential computation. The Jacobian determinant is the uncertainty sensor. Flow inversion is cognitive reset. Not interpretability bolted on — awareness built into the geometry.</p>
+          </div>
+          <div class="sub-grid">
+            <div class="sub-item">
+              <div class="sub-item-name">Motif / Pattern IR</div>
+              <div class="sub-item-desc">The LLVM of music. Composite morphism in category Poly of polynomial functors. Forward map: code to sound. Backward map: sound back to code. Provenance composes through arbitrary transform chains.</div>
+            </div>
+            <div class="sub-item">
+              <div class="sub-item-name">Anvikshiki Engine</div>
+              <div class="sub-item-desc">Neurosymbolic argumentation via ASPIC+ over provenance semirings. Epistemic status emerges from argumentation semantics, not hand-assignment. Five-layer NL-to-predicate grounding.</div>
+            </div>
+            <div class="sub-item">
+              <div class="sub-item-name">Virtual Time Scheduling</div>
+              <div class="sub-item-desc">sleep() returns a Promise only the scheduler can resolve. Sonic Pi's exact cooperative concurrency semantics in JavaScript — without thread blocking.</div>
+            </div>
+            <div class="sub-item">
+              <div class="sub-item-name">Full Transparency</div>
+              <div class="sub-item-desc">Quadtree decomposition + normalizing flows for invertible neural rendering + provenance chains from keystroke to waveform. No black boxes remain.</div>
+            </div>
+          </div>
+          <span class="product-tag">22 chapters</span>
+          <span class="product-tag">52K+ files engine</span>
+          <span class="product-tag">Category theory</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10: FOOTER -->
+    <section class="panel">
+      <div class="glow glow-center"></div>
+      <div class="panel-inner">
+        <div class="footer-content">
+          <p class="footer-line">Opacity is a design choice.<br>We chose the other thing.</p>
+          <p class="footer-name">Mrityunjay Bhardwaj &middot; Dyzen AI Pvt Ltd</p>
+          <div class="footer-links">
+            <a href="https://x.com/dyaborin">X</a>
+            <a href="https://github.com/mrityunjaybhardwaj">GitHub</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    (() => {
+      const track = document.getElementById('track');
+      const panels = [...document.querySelectorAll('.panel')];
+      const counter = document.getElementById('counter');
+      const totalEl = document.getElementById('total');
+      const progress = document.getElementById('progress');
+      const scrollHint = document.getElementById('scrollHint');
+      const nav = document.getElementById('nav');
+      const total = panels.length;
+
+      totalEl.textContent = total;
+
+      let currentIndex = 0;
+      let targetX = 0;
+      let currentX = 0;
+      let lastWheelTime = 0;
+      const WHEEL_COOLDOWN = 800;
+      const LERP = 0.075;
+
+      panels.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Section ' + (i + 1));
+        dot.addEventListener('click', () => goTo(i));
+        nav.appendChild(dot);
+      });
+      const dots = [...document.querySelectorAll('.nav-dot')];
+
+      function animate() {
+        const dx = targetX - currentX;
+        if (Math.abs(dx) > 0.5) {
+          currentX += dx * LERP;
+          window._scrollSettled = false;
+        } else {
+          currentX = targetX;
+          window._scrollSettled = true;
+        }
+        track.style.transform = `translateX(${-currentX}px)`;
+        const maxScroll = (total - 1) * window.innerWidth;
+        progress.style.width = (maxScroll > 0 ? (currentX / maxScroll) * 100 : 0) + '%';
+        requestAnimationFrame(animate);
+      }
+
+      function goTo(index, instant) {
+        index = Math.max(0, Math.min(total - 1, index));
+        const prev = currentIndex;
+        currentIndex = index;
+        targetX = index * window.innerWidth;
+
+        if (instant) {
+          currentX = targetX;
+          track.style.transform = `translateX(${-currentX}px)`;
+        }
+
+        counter.textContent = index + 1;
+        window._visiblePanel = index; // share with simulation
+        dots.forEach((d, i) => d.classList.toggle('active', i === index));
+        if (index > 0) scrollHint.classList.add('hidden');
+
+        panels.forEach((p, i) => {
+          p.classList.remove('visible', 'exiting');
+          if (i === index) p.classList.add('visible');
+          else if (i === prev && prev !== index) p.classList.add('exiting');
+        });
+      }
+
+      window.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const now = Date.now();
+        if (now - lastWheelTime < WHEEL_COOLDOWN) return;
+        const delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+        if (Math.abs(delta) < 12) return;
+        lastWheelTime = now;
+        goTo(currentIndex + (delta > 0 ? 1 : -1));
+      }, { passive: false });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); goTo(currentIndex + 1); }
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); goTo(currentIndex - 1); }
+      });
+
+      let tx = 0, ty = 0, tt = 0;
+      window.addEventListener('touchstart', (e) => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; tt = Date.now(); }, { passive: true });
+      window.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - tx;
+        if (Math.abs(dx) < 40 || Date.now() - tt > 600) return;
+        goTo(currentIndex + (dx < -40 ? 1 : -1));
+      }, { passive: true });
+
+      document.querySelectorAll('.question-row[data-target]').forEach(row => {
+        row.addEventListener('click', () => goTo(parseInt(row.dataset.target)));
+      });
+
+      document.getElementById('viewsrc').addEventListener('click', () => {
+        const w = window.open('', '_blank');
+        w.document.write('<pre style="background:#111;color:#ddd;padding:24px;font-size:13px;line-height:1.6;white-space:pre-wrap;word-wrap:break-word">' +
+          document.documentElement.outerHTML.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</pre>');
+        w.document.title = 'Dyzen — Source (' + document.documentElement.outerHTML.length + ' bytes, no framework)';
+        w.document.close();
+      });
+
+      window.addEventListener('resize', () => {
+        targetX = currentIndex * window.innerWidth;
+        currentX = targetX;
+        track.style.transform = `translateX(${-currentX}px)`;
+      });
+
+      // Theme toggle
+      const toggle = document.getElementById('themeToggle');
+      const savedTheme = localStorage.getItem('dyzen-theme');
+      if (savedTheme === 'light') document.documentElement.classList.add('light');
+
+      toggle.addEventListener('click', () => {
+        document.documentElement.classList.toggle('light');
+        const isLight = document.documentElement.classList.contains('light');
+        localStorage.setItem('dyzen-theme', isLight ? 'light' : 'dark');
+      });
+
+      goTo(0, true);
+      requestAnimationFrame(animate);
+    })();
+  </script>
+
+  <script>
+    // Shared terrain + living world
+    (() => {
+      const tCanvas = document.getElementById('terrain');
+      const tCtx = tCanvas.getContext('2d');
+      const oCanvas = document.getElementById('ocean');
+      const oCtx = oCanvas.getContext('2d');
+      const wCanvas = document.getElementById('world');
+      const wCtx = wCanvas.getContext('2d');
+      let W, H, dpr;
+      let oceanTime = 0;
+
+      // Glass card interaction — shared state
+      let activeCardRect = null; // { x, y, w, h } when hovered
+      let cardPulse = 0;       // animation phase when card is hovered
+      const CARD_ATTRACT_RANGE = 140; // pull range from card edge
+      const CARD_BORDER_ZONE = 25;    // border survival band (inside card, near edges)
+      const CARD_KILL_RATE = 0.003;   // slow death rate deep inside card
+      const CARD_SURVIVE_CHANCE = 0.85; // 85% escape from border zone
+      const LENS_RANGE = 100;         // glow boost range outside card
+
+      // ===== PERLIN NOISE =====
+      const P = new Uint8Array(512);
+      const G = [[1,1],[-1,1],[1,-1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1]];
+      for (let i = 0; i < 256; i++) P[i] = i;
+      for (let i = 255; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [P[i], P[j]] = [P[j], P[i]]; }
+      for (let i = 0; i < 256; i++) P[i + 256] = P[i];
+      function fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
+      function lerp(a, b, t) { return a + t * (b - a); }
+      function dot2(g, x, y) { return g[0] * x + g[1] * y; }
+      function noise(x, y) {
+        const X = Math.floor(x) & 255, Y = Math.floor(y) & 255;
+        x -= Math.floor(x); y -= Math.floor(y);
+        const u = fade(x), v = fade(y);
+        const a = P[X] + Y, b = P[X + 1] + Y;
+        return lerp(lerp(dot2(G[P[a]&7],x,y),dot2(G[P[b]&7],x-1,y),u),lerp(dot2(G[P[a+1]&7],x,y-1),dot2(G[P[b+1]&7],x-1,y-1),u),v);
+      }
+      function fbm(x, y, oct) {
+        let v=0, amp=1, freq=1, m=0;
+        for (let i=0;i<oct;i++) { v+=noise(x*freq,y*freq)*amp; m+=amp; amp*=0.5; freq*=2; }
+        return v/m;
+      }
+      // height: -0.5 deep ocean ... 0 sea level ... 0.5 peak
+      // Compressed + shifted: ~60% of map in livable band
+      // Raw fbm → compressed to ~[-0.08, 0.20], centered higher
+      function heightAt(px, py) { return fbm(px * 0.0018, py * 0.0018, 6) * 0.36 + 0.045; }
+
+      // ===== TERRAIN DATA =====
+      const STEP = 6;
+      let terrainField, terrainCols, terrainRows;
+      let features = [], roads = [];
+
+      function sampleTerrain() {
+        terrainCols = Math.ceil(W / STEP) + 1;
+        terrainRows = Math.ceil(H / STEP) + 1;
+        terrainField = [];
+        for (let r = 0; r < terrainRows; r++) {
+          terrainField[r] = [];
+          for (let c = 0; c < terrainCols; c++) terrainField[r][c] = heightAt(c * STEP, r * STEP);
+        }
+        features = placeFeatures();
+        roads = generateRoads();
+      }
+
+      // Quick height lookup from field (bilinear)
+      function terrainH(px, py) {
+        const c = px / STEP, r = py / STEP;
+        const c0 = Math.floor(c), r0 = Math.floor(r);
+        if (r0 < 0 || r0 >= terrainRows-1 || c0 < 0 || c0 >= terrainCols-1) return heightAt(px, py);
+        const fc = c - c0, fr = r - r0;
+        return lerp(lerp(terrainField[r0][c0], terrainField[r0][c0+1], fc),
+                     lerp(terrainField[r0+1][c0], terrainField[r0+1][c0+1], fc), fr);
+      }
+
+      // Terrain gradient (downhill direction)
+      function terrainGrad(px, py) {
+        const d = 8;
+        const hx = (terrainH(px+d,py) - terrainH(px-d,py)) / (2*d);
+        const hy = (terrainH(px,py+d) - terrainH(px,py-d)) / (2*d);
+        return { gx: hx, gy: hy };
+      }
+
+      function isOcean(px, py) { return terrainH(px, py) < -0.03; }
+      function isMountain(px, py) { return terrainH(px, py) > 0.13; }
+
+      // ===== FEATURES =====
+      function placeFeatures() {
+        const feats = [];
+        let seed = 42;
+        function rng() { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return (seed >>> 0) / 4294967296; }
+
+        // Settlements: grid-based even spread across the map
+        // Divide map into sectors, place one settlement per sector on best livable terrain
+        const GRID_COLS = 6, GRID_ROWS = 4; // 24 sectors
+        const sectorW = W / GRID_COLS, sectorH = H / GRID_ROWS;
+        let colonyIdx = 0;
+
+        for (let gr = 0; gr < GRID_ROWS; gr++) {
+          for (let gc = 0; gc < GRID_COLS; gc++) {
+            // Search for best livable spot in this sector
+            const sx0 = gc * sectorW, sy0 = gr * sectorH;
+            let bestX = -1, bestY = -1, bestScore = -Infinity;
+
+            for (let att = 0; att < 40; att++) {
+              const px = sx0 + 20 + rng() * (sectorW - 40);
+              const py = sy0 + 20 + rng() * (sectorH - 40);
+              const h = terrainH(px, py);
+              // Score: prefer flat ground (h near 0.04), penalize edges
+              if (h > 0.01 && h < 0.08) {
+                const flatness = 1 - Math.abs(h - 0.04) * 15;
+                const edgeDist = Math.min(px - sx0, sx0 + sectorW - px, py - sy0, sy0 + sectorH - py) / 40;
+                const score = flatness + Math.min(1, edgeDist) * 0.3;
+                if (score > bestScore) { bestScore = score; bestX = px; bestY = py; }
+              }
+            }
+
+            if (bestX >= 0) {
+              feats.push({
+                type: 'settlement', x: bestX, y: bestY, h: terrainH(bestX, bestY),
+                colony: colonyIdx % COLONY_COUNT,
+                mood: rng() > 0.5 ? 'happy' : 'sad',
+                allegiance: rng() > 0.5 ? 'friend' : 'foe',
+                size: 4 + rng() * 5
+              });
+              colonyIdx++;
+            }
+          }
+        }
+        // Mountains
+        for (let r = 3; r < terrainRows-3; r += 4) {
+          for (let c = 3; c < terrainCols-3; c += 4) {
+            const h = terrainField[r][c];
+            if (h > 0.12 && terrainField[r-1][c]<h && terrainField[r+1][c]<h && terrainField[r][c-1]<h && terrainField[r][c+1]<h)
+              feats.push({ type: 'mountain', x: c*STEP, y: r*STEP, h });
+          }
+        }
+        return feats;
+      }
+
+      function generateRoads() {
+        const s = features.filter(f=>f.type==='settlement');
+        const r = [];
+        for (let i=0;i<s.length;i++) for (let j=i+1;j<s.length;j++) {
+          if (Math.hypot(s[i].x-s[j].x, s[i].y-s[j].y) < 350 && s[i].allegiance===s[j].allegiance)
+            r.push([s[i],s[j]]);
+        }
+        return r;
+      }
+
+      // ===== DRAW TERRAIN (static, redrawn on resize/theme) =====
+      // Cache for ocean contour animation
+      const OCEAN_BASE_LEVELS = [-0.11, -0.06, -0.03];
+      const OCEAN_DEPTH_ALPHA = [0.8, 0.6, 0.45];
+      const OCEAN_DEPTH_WIDTH = [2.5, 2, 1.5];
+
+      function drawTerrain() {
+        tCtx.clearRect(0, 0, W, H);
+        const rgb = getComputedStyle(document.documentElement).getPropertyValue('--terrain-stroke').trim();
+        const isLight = document.documentElement.classList.contains('light');
+
+        // Land contour lines only (ocean drawn separately on animated canvas)
+        const landLevels = [0, 0.03, 0.06, 0.09, 0.12, 0.15];
+        for (let li = 0; li < landLevels.length; li++) {
+          const segs = contourLines(landLevels[li]);
+          const major = li === 0; // sea level
+          tCtx.strokeStyle = `rgba(${rgb}, ${major ? 0.6 : 0.25})`;
+          tCtx.lineWidth = major ? 1 : 0.5;
+          tCtx.beginPath();
+          for (const [a,b] of segs) { tCtx.moveTo(a[0],a[1]); tCtx.lineTo(b[0],b[1]); }
+          tCtx.stroke();
+        }
+        // Rivers
+        tCtx.lineWidth = 0.7; tCtx.strokeStyle = `rgba(${rgb}, 0.2)`;
+        for (const f of features) {
+          if (f.type!=='mountain') continue;
+          let cx=f.x/STEP, cy=f.y/STEP;
+          tCtx.beginPath(); tCtx.moveTo(f.x,f.y);
+          for (let s=0;s<80;s++) {
+            const cr=Math.floor(cy),cc=Math.floor(cx);
+            if (cr<1||cr>=terrainRows-1||cc<1||cc>=terrainCols-1) break;
+            let bR=cr,bC=cc,bH=terrainField[cr][cc];
+            for (let dr=-1;dr<=1;dr++) for (let dc=-1;dc<=1;dc++) { if(!dr&&!dc) continue; const h=terrainField[cr+dr][cc+dc]; if(h<bH){bH=h;bR=cr+dr;bC=cc+dc;} }
+            if (bR===cr&&bC===cc) break;
+            cx=bC+0.5; cy=bR+0.5; tCtx.lineTo(cx*STEP,cy*STEP);
+            if (bH<-0.03) break;
+          }
+          tCtx.stroke();
+        }
+        // Settlement markers
+        for (const f of features) {
+          if (f.type==='settlement') {
+            const s=f.size;
+            tCtx.strokeStyle=`rgba(${rgb},0.5)`; tCtx.lineWidth=1;
+            if (f.allegiance==='friend') { tCtx.beginPath(); tCtx.arc(f.x,f.y,s,0,Math.PI*2); tCtx.stroke(); tCtx.fillStyle=`rgba(${rgb},0.06)`; tCtx.fill(); }
+            else { tCtx.beginPath(); tCtx.moveTo(f.x,f.y-s); tCtx.lineTo(f.x+s,f.y); tCtx.lineTo(f.x,f.y+s); tCtx.lineTo(f.x-s,f.y); tCtx.closePath(); tCtx.stroke(); tCtx.fillStyle=`rgba(${rgb},0.06)`; tCtx.fill(); }
+            tCtx.strokeStyle=`rgba(${rgb},0.4)`;
+            if (f.mood==='happy') { tCtx.beginPath(); tCtx.arc(f.x+s+5,f.y,2.5,0,Math.PI,false); tCtx.stroke(); }
+            else { tCtx.beginPath(); tCtx.arc(f.x+s+5,f.y,2.5,0,Math.PI,true); tCtx.stroke(); }
+            if (s>5) { tCtx.fillStyle=`rgba(${rgb},0.15)`; for (let a=0;a<Math.PI*2;a+=Math.PI/3) { tCtx.beginPath(); tCtx.arc(f.x+Math.cos(a)*(s+4),f.y+Math.sin(a)*(s+4),0.8,0,Math.PI*2); tCtx.fill(); } }
+          }
+          if (f.type==='mountain') { tCtx.strokeStyle=`rgba(${rgb},0.4)`; tCtx.lineWidth=0.8; tCtx.beginPath(); tCtx.moveTo(f.x,f.y-5); tCtx.lineTo(f.x+4,f.y+3); tCtx.lineTo(f.x-4,f.y+3); tCtx.closePath(); tCtx.stroke(); }
+        }
+      }
+
+      // Animated ocean — called every frame
+      function drawOcean() {
+        oCtx.clearRect(0, 0, W, H);
+        oceanTime += 0.002; // very slow tick
+
+        const isLight = document.documentElement.classList.contains('light');
+        const cyan = isLight ? '0, 140, 160' : '0, 200, 220';
+
+        // Two wave systems:
+        // 1. Shore waves: contour levels oscillate with a phase offset per depth (wave propagation)
+        // 2. Deep breathing: all levels expand/contract together from deep ocean
+
+        // Deep ocean breathing — slow sinusoidal expansion/contraction
+        const breathe = Math.sin(oceanTime * 0.4) * 0.006; // ±0.006 height shift
+
+        for (let li = 0; li < OCEAN_BASE_LEVELS.length; li++) {
+          const baseLevel = OCEAN_BASE_LEVELS[li];
+          const depthFactor = (2 - li) / 2; // 1.0 for deepest, 0.0 for shallowest
+
+          // Shore wave: faster oscillation, larger amplitude for shallow, phase offset per depth
+          const shoreWave = Math.sin(oceanTime * 1.2 + li * 1.8) * 0.008 * (1 - depthFactor * 0.6);
+
+          // Secondary ripple — faster, smaller
+          const ripple = Math.sin(oceanTime * 2.5 + li * 0.9) * 0.003;
+
+          // Combined animated level
+          const animLevel = baseLevel + breathe * depthFactor + shoreWave + ripple;
+
+          const segs = contourLines(animLevel);
+
+          // Pulsing alpha and width
+          const alphaBase = OCEAN_DEPTH_ALPHA[li];
+          const widthBase = OCEAN_DEPTH_WIDTH[li];
+          const pulse = 0.85 + Math.sin(oceanTime * 0.6 + li * 2) * 0.15;
+
+          oCtx.strokeStyle = `rgba(${cyan}, ${alphaBase * pulse})`;
+          oCtx.lineWidth = widthBase * (0.9 + Math.sin(oceanTime * 0.8 + li) * 0.15);
+
+          oCtx.beginPath();
+          for (const [a, b] of segs) { oCtx.moveTo(a[0], a[1]); oCtx.lineTo(b[0], b[1]); }
+          oCtx.stroke();
+        }
+
+        // Animated ocean hatching — wave pattern
+        const hatchPhase = oceanTime * 0.3;
+        oCtx.lineWidth = 0.5;
+        for (let r = 0; r < terrainRows - 1; r += 2) {
+          for (let c = 0; c < terrainCols - 1; c++) {
+            if (terrainField[r][c] < -0.03) {
+              // Hatching alpha pulses based on position + time (wave ripple)
+              const wave = Math.sin(c * 0.15 + r * 0.08 + hatchPhase) * 0.5 + 0.5;
+              oCtx.strokeStyle = `rgba(${cyan}, ${0.03 + wave * 0.06})`;
+              oCtx.beginPath();
+              oCtx.moveTo(c * STEP, r * STEP);
+              oCtx.lineTo(c * STEP + STEP, r * STEP + STEP * 0.5);
+              oCtx.stroke();
+            }
+          }
+        }
+      }
+
+      // Contour deformation around visible panel's glass card
+      // Always active when a product panel is visible (transparent panels)
+      let lastPanelRect = null;
+      let panelWarp = 0;
+
+      function getVisibleCardRect() {
+        const idx = window._visiblePanel || 0;
+        const allPanels = document.querySelectorAll('.panel');
+        if (idx < 0 || idx >= allPanels.length) return null;
+        const card = allPanels[idx].querySelector('.product-glass');
+        if (!card) return null;
+        const r = card.getBoundingClientRect();
+        if (r.width < 10) return null;
+        return { x: r.left, y: r.top, w: r.width, h: r.height };
+      }
+
+      function drawCardTerrain() {
+        const settled = window._scrollSettled;
+        // Only warp when hovering a glass card AND scroll has settled
+        const hovering = activeCardRect && settled;
+        const cr = hovering ? activeCardRect : null;
+
+        if (cr) {
+          panelWarp += (1 - panelWarp) * 0.04; // ease in
+        } else {
+          panelWarp += (0 - panelWarp) * 0.06; // ease out naturally
+        }
+
+        if (panelWarp < 0.01 && !lastPanelRect) return;
+
+        if (panelWarp < 0.01 && lastPanelRect) {
+          lastPanelRect = null;
+          panelWarp = 0;
+          drawTerrain();
+          return;
+        }
+
+        const rect = cr || lastPanelRect;
+        if (!rect) return;
+
+        if (!lastPanelRect || Math.abs(lastPanelRect.x - rect.x) > 2 || Math.abs(lastPanelRect.y - rect.y) > 2) {
+          drawTerrain();
+        }
+        lastPanelRect = { ...rect };
+
+        const wa = panelWarp;
+        const PAD = 20;
+        const BR = 24;
+        const rx = rect.x - PAD, ry = rect.y - PAD;
+        const rw = rect.w + PAD * 2, rh = rect.h + PAD * 2;
+
+        // clearRect moved after grid computation below
+
+        // Rounded rect SDF
+        function sdf(px, py) {
+          const hx = rect.w / 2, hy = rect.h / 2;
+          const cx = rect.x + hx, cy = rect.y + hy;
+          const lx = Math.abs(px - cx) - hx + BR;
+          const ly = Math.abs(py - cy) - hy + BR;
+          const dx = Math.max(lx, 0), dy = Math.max(ly, 0);
+          const ins = Math.min(Math.max(lx, ly), 0);
+          return Math.sqrt(dx * dx + dy * dy) + ins - BR;
+        }
+
+        function sdfGrad(px, py) {
+          const e = 1.5;
+          const gx = (sdf(px + e, py) - sdf(px - e, py)) / (2 * e);
+          const gy = (sdf(px, py + e) - sdf(px, py - e)) / (2 * e);
+          const gl = Math.sqrt(gx * gx + gy * gy);
+          return gl > 0.001 ? { nx: gx / gl, ny: gy / gl } : { nx: 0, ny: 0 };
+        }
+
+        // Warp: map terrain inside the card to follow the card's shape
+        // Inside: height = terrain at the boundary point + SDF-based offset
+        //   This creates concentric contour rings that follow the rounded rect
+        // Outside: pull samples inward toward boundary
+        const halfMin = Math.min(rect.w, rect.h) / 2;
+
+        function warpedH(px, py) {
+          const d = sdf(px, py);
+          if (d > PAD) return terrainH(px, py);
+
+          const { nx, ny } = sdfGrad(px, py);
+          // Nearest boundary point
+          const ex = px - nx * d;
+          const ey = py - ny * d;
+
+          if (d < 0) {
+            // INSIDE — read terrain at boundary, then add SDF-based height offset
+            // so contour lines become concentric rings of the card shape
+            const edgeH = terrainH(ex, ey);
+            // Normalized depth: 0 at edge, 1 at center
+            const depthNorm = Math.min(1, Math.abs(d) / halfMin);
+            // Height offset: creates concentric bands by scaling SDF into height space
+            // Uses the actual SDF distance to create rings at each contour level
+            const sdfOffset = (Math.abs(d) / halfMin) * 0.12; // maps depth to height range
+            const blended = edgeH + sdfOffset;
+
+            // Blend between real terrain and card-shaped terrain based on warp amount
+            const baseH = terrainH(px, py);
+            return baseH * (1 - wa) + blended * wa;
+          } else {
+            // OUTSIDE — pull sample inward toward boundary
+            const t = d / PAD;
+            const smooth = 1 - t * t * (3 - 2 * t);
+            const pull = smooth * wa * 0.9;
+            const sx = px + (ex - px) * pull;
+            const sy = py + (ey - py) * pull;
+            return terrainH(sx, sy);
+          }
+        }
+
+        // Local grid
+        const ls = STEP;
+        const c0 = Math.max(0, Math.floor(rx / ls) - 1);
+        const r0 = Math.max(0, Math.floor(ry / ls) - 1);
+        const c1 = Math.min(terrainCols - 1, Math.ceil((rx + rw) / ls) + 1);
+        const r1 = Math.min(terrainRows - 1, Math.ceil((ry + rh) / ls) + 1);
+        const lc = c1 - c0 + 1, lr = r1 - r0 + 1;
+
+        // Clear using exact grid bounds — matches what local marching squares will redraw
+        const clearX = c0 * ls, clearY = r0 * ls;
+        const clearW = lc * ls, clearH = lr * ls;
+        tCtx.clearRect(clearX, clearY, clearW, clearH);
+        oCtx.clearRect(clearX, clearY, clearW, clearH);
+
+        const lf = [];
+        for (let r = 0; r < lr; r++) {
+          lf[r] = [];
+          for (let c = 0; c < lc; c++) {
+            lf[r][c] = warpedH((c0 + c) * ls, (r0 + r) * ls);
+          }
+        }
+
+        function localMS(th) {
+          const segs = [];
+          for (let r = 0; r < lr - 1; r++) for (let c = 0; c < lc - 1; c++) {
+            const tl=lf[r][c],tr=lf[r][c+1],bl=lf[r+1][c],br=lf[r+1][c+1];
+            const idx=(tl>=th?8:0)|(tr>=th?4:0)|(br>=th?2:0)|(bl>=th?1:0);
+            if(!idx||idx===15)continue;
+            const x0=(c0+c)*ls,y0=(r0+r)*ls;
+            const ip=(a,b)=>(th-a)/(b-a);
+            const t=ip(tl,tr),ri=ip(tr,br),bo=ip(bl,br),l=ip(tl,bl);
+            const T=[x0+t*ls,y0],R=[x0+ls,y0+ri*ls],B=[x0+bo*ls,y0+ls],L=[x0,y0+l*ls];
+            const C={1:[[L,B]],2:[[B,R]],3:[[L,R]],4:[[T,R]],5:[[T,L],[B,R]],6:[[T,B]],7:[[T,L]],8:[[T,L]],9:[[T,B]],10:[[T,R],[B,L]],11:[[T,R]],12:[[L,R]],13:[[B,R]],14:[[L,B]]};
+            if(C[idx])segs.push(...C[idx]);
+          }
+          return segs;
+        }
+
+        const rgb = getComputedStyle(document.documentElement).getPropertyValue('--terrain-stroke').trim();
+        const isLight = document.documentElement.classList.contains('light');
+        const cyan = isLight ? '0, 140, 160' : '0, 200, 220';
+
+        // Land contours
+        const landLevels = [0, 0.03, 0.06, 0.09, 0.12, 0.15];
+        for (let li = 0; li < landLevels.length; li++) {
+          const segs = localMS(landLevels[li]);
+          const major = li === 0;
+          tCtx.strokeStyle = `rgba(${rgb}, ${major ? 0.6 : 0.25})`;
+          tCtx.lineWidth = major ? 1 : 0.5;
+          tCtx.beginPath();
+          for (const [a,b] of segs) {
+            tCtx.moveTo(a[0],a[1]); tCtx.lineTo(b[0],b[1]);
+          }
+          tCtx.stroke();
+        }
+
+        // Ocean contours (animated)
+        const oLevels = [-0.11, -0.06, -0.03];
+        const oAlpha = [0.8, 0.6, 0.45], oWidth = [2.5, 2, 1.5];
+        for (let li = 0; li < oLevels.length; li++) {
+          const df = (2 - li) / 2;
+          const sw = Math.sin(oceanTime * 1.2 + li * 1.8) * 0.008 * (1 - df * 0.6);
+          const br2 = Math.sin(oceanTime * 0.4) * 0.006;
+          const rp = Math.sin(oceanTime * 2.5 + li * 0.9) * 0.003;
+          const al = oLevels[li] + br2 * df + sw + rp;
+          const segs = localMS(al);
+          const pulse = 0.85 + Math.sin(oceanTime * 0.6 + li * 2) * 0.15;
+          oCtx.strokeStyle = `rgba(${cyan}, ${oAlpha[li] * pulse})`;
+          oCtx.lineWidth = oWidth[li] * (0.9 + Math.sin(oceanTime * 0.8 + li) * 0.15);
+          oCtx.beginPath();
+          for (const [a,b] of segs) {
+            oCtx.moveTo(a[0],a[1]); oCtx.lineTo(b[0],b[1]);
+          }
+          oCtx.stroke();
+        }
+      }
+
+      function contourLines(threshold) {
+        const segs = [];
+        for (let r=0;r<terrainRows-1;r++) for (let c=0;c<terrainCols-1;c++) {
+          const tl=terrainField[r][c],tr=terrainField[r][c+1],bl=terrainField[r+1][c],br=terrainField[r+1][c+1];
+          const idx=(tl>=threshold?8:0)|(tr>=threshold?4:0)|(br>=threshold?2:0)|(bl>=threshold?1:0);
+          if (!idx||idx===15) continue;
+          const x0=c*STEP,y0=r*STEP;
+          function ip(a,b){return(threshold-a)/(b-a);}
+          const t=ip(tl,tr),ri=ip(tr,br),bo=ip(bl,br),l=ip(tl,bl);
+          const T=[x0+t*STEP,y0],R=[x0+STEP,y0+ri*STEP],B=[x0+bo*STEP,y0+STEP],L=[x0,y0+l*STEP];
+          const C={1:[[L,B]],2:[[B,R]],3:[[L,R]],4:[[T,R]],5:[[T,L],[B,R]],6:[[T,B]],7:[[T,L]],8:[[T,L]],9:[[T,B]],10:[[T,R],[B,L]],11:[[T,R]],12:[[L,R]],13:[[B,R]],14:[[L,B]]};
+          if (C[idx]) segs.push(...C[idx]);
+        }
+        return segs;
+      }
+
+      // ===== ANT-COLONY CROWD SIMULATION =====
+      const COLONY_HUES = [210, 330, 120];
+      const COLONY_COUNT = 3;
+      const POP_PER_COLONY = 70;
+      const PREDATOR_COUNT = 6;
+      const EDGE_MARGIN = 50;
+      const EDGE_TURN = 0.3;
+
+      // Roles
+      const WORKER = 0, SCOUT = 1, GUARD = 2, PREDATOR = 3;
+      // States
+      const IDLE = 0, FORAGE = 1, RETURN = 2, EXPLORE = 3, FLEE = 4, PATROL = 5, HUNT = 6, REST = 7;
+
+      const entities = [];
+      let resources = [];
+      let towns = []; // { id, colony, cx, cy, settlements: [...], resources: [...] }
+      // Pheromone grid — low-res, fades over time
+      const PHERO_RES = 8; // pixels per cell
+      let pheroW, pheroH, pheromones; // [colony][row][col] = intensity 0-1
+
+      function initPheromones() {
+        pheroW = Math.ceil(W / PHERO_RES);
+        pheroH = Math.ceil(H / PHERO_RES);
+        pheromones = [];
+        for (let c = 0; c < COLONY_COUNT; c++) {
+          pheromones[c] = [];
+          for (let r = 0; r < pheroH; r++) {
+            pheromones[c][r] = new Float32Array(pheroW);
+          }
+        }
+      }
+
+      function dropPheromone(colony, px, py, amount) {
+        const c = Math.floor(px / PHERO_RES), r = Math.floor(py / PHERO_RES);
+        if (r >= 0 && r < pheroH && c >= 0 && c < pheroW) {
+          pheromones[colony][r][c] = Math.min(1, pheromones[colony][r][c] + amount);
+        }
+      }
+
+      function readPheromone(colony, px, py) {
+        const c = Math.floor(px / PHERO_RES), r = Math.floor(py / PHERO_RES);
+        if (r >= 0 && r < pheroH && c >= 0 && c < pheroW) return pheromones[colony][r][c];
+        return 0;
+      }
+
+      function decayPheromones() {
+        for (let c = 0; c < COLONY_COUNT; c++)
+          for (let r = 0; r < pheroH; r++)
+            for (let k = 0; k < pheroW; k++)
+              pheromones[c][r][k] *= 0.997;
+      }
+
+      // Follow strongest pheromone gradient of own colony
+      function pheromoneSteer(colony, px, py) {
+        let bx = 0, by = 0;
+        const R = 3; // check 3-cell radius
+        for (let dr = -R; dr <= R; dr++) for (let dc = -R; dc <= R; dc++) {
+          if (!dr && !dc) continue;
+          const cr = Math.floor(py / PHERO_RES) + dr, cc = Math.floor(px / PHERO_RES) + dc;
+          if (cr < 0 || cr >= pheroH || cc < 0 || cc >= pheroW) continue;
+          const v = pheromones[colony][cr][cc];
+          const d = Math.sqrt(dr * dr + dc * dc);
+          bx += (dc / d) * v; by += (dr / d) * v;
+        }
+        return { x: bx, y: by };
+      }
+
+      // Scatter resources evenly — grid-based like settlements
+      function placeResources() {
+        resources = [];
+        let seed = 7777;
+        function rng() { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return (seed >>> 0) / 4294967296; }
+
+        // Denser grid than settlements: 8x5 = 40 sectors, ~1-2 resources each
+        const RG_COLS = 8, RG_ROWS = 5;
+        const rsW = W / RG_COLS, rsH = H / RG_ROWS;
+
+        for (let gr = 0; gr < RG_ROWS; gr++) {
+          for (let gc = 0; gc < RG_COLS; gc++) {
+            const sx0 = gc * rsW, sy0 = gr * rsH;
+            // Try to place 1 resource in this sector
+            for (let att = 0; att < 20; att++) {
+              const x = sx0 + 10 + rng() * (rsW - 20);
+              const y = sy0 + 10 + rng() * (rsH - 20);
+              const h = terrainH(x, y);
+              if (h > 0.005 && h < 0.08) {
+                const tooClose = resources.some(r => Math.hypot(r.x - x, r.y - y) < 50) ||
+                                 features.some(f => f.type === 'settlement' && Math.hypot(f.x - x, f.y - y) < 35);
+                if (!tooClose) {
+                  resources.push({ x, y, amount: 0.5 + rng() * 0.5, maxAmount: 0.5 + rng() * 0.5 });
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      function getColonySettlements(colony) {
+        return features.filter(f => f.type === 'settlement' && f.colony === colony);
+      }
+
+      // Build towns: cluster settlements by proximity, each town is a sub-network
+      function buildTowns() {
+        towns = [];
+        const settlements = features.filter(f => f.type === 'settlement');
+        const assigned = new Set();
+        const CLUSTER_RADIUS = 300; // settlements within this form a town
+
+        for (const s of settlements) {
+          if (assigned.has(s)) continue;
+          // Gather nearby unassigned settlements of same colony
+          const cluster = [s];
+          assigned.add(s);
+          for (const o of settlements) {
+            if (assigned.has(o) || o.colony !== s.colony) continue;
+            if (Math.hypot(s.x - o.x, s.y - o.y) < CLUSTER_RADIUS) {
+              cluster.push(o);
+              assigned.add(o);
+            }
+          }
+          // Also allow single settlements from other colonies if they're very close (border towns)
+          const cx = cluster.reduce((a, c) => a + c.x, 0) / cluster.length;
+          const cy = cluster.reduce((a, c) => a + c.y, 0) / cluster.length;
+
+          // Find nearby resources for this town
+          const townResources = resources.filter(r => Math.hypot(r.x - cx, r.y - cy) < CLUSTER_RADIUS * 1.2);
+
+          towns.push({
+            id: towns.length,
+            colony: s.colony,
+            cx, cy,
+            settlements: cluster,
+            resources: townResources,
+          });
+        }
+
+        // Any lone settlement not clustered — make its own town
+        for (const s of settlements) {
+          if (!assigned.has(s)) {
+            const townRes = resources.filter(r => Math.hypot(r.x - s.x, r.y - s.y) < CLUSTER_RADIUS);
+            towns.push({ id: towns.length, colony: s.colony, cx: s.x, cy: s.y, settlements: [s], resources: townRes });
+          }
+        }
+      }
+
+      function ddist(a, b) { return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2); }
+
+      // Returns { outside, inside, depth, toEdge, nx, ny, toCenterX, toCenterY }
+      // outside: distance from card edge (0 if inside)
+      // inside: true if point is within the card rect
+      // depth: how far inside (0 at edge, large at center)
+      // toEdge: distance to nearest edge (from inside)
+      function cardInfo(px, py) {
+        if (!activeCardRect) return { outside: Infinity, inside: false, depth: 0, toEdge: Infinity, nx: 0, ny: 0, toCenterX: 0, toCenterY: 0 };
+        const r = activeCardRect;
+        const cx = r.x + r.w / 2, cy = r.y + r.h / 2;
+        const toCenterX = cx - px, toCenterY = cy - py;
+
+        const isInside = px >= r.x && px <= r.x + r.w && py >= r.y && py <= r.y + r.h;
+
+        if (isInside) {
+          const toLeft = px - r.x, toRight = r.x + r.w - px;
+          const toTop = py - r.y, toBottom = r.y + r.h - py;
+          const toEdge = Math.min(toLeft, toRight, toTop, toBottom);
+          const maxDepth = Math.min(r.w, r.h) / 2;
+          // nx,ny: direction toward nearest edge (escape direction)
+          let nx = 0, ny = 0;
+          if (toEdge === toLeft) nx = -1;
+          else if (toEdge === toRight) nx = 1;
+          else if (toEdge === toTop) ny = -1;
+          else ny = 1;
+          return { outside: 0, inside: true, depth: maxDepth - toEdge, toEdge, nx, ny, toCenterX, toCenterY };
+        }
+
+        // Outside — distance to nearest point on rect
+        const nearX = Math.max(r.x, Math.min(px, r.x + r.w));
+        const nearY = Math.max(r.y, Math.min(py, r.y + r.h));
+        const dx = px - nearX, dy = py - nearY;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        return { outside: d, inside: false, depth: 0, toEdge: 0, nx: d > 0.1 ? dx / d : 0, ny: d > 0.1 ? dy / d : 0, toCenterX, toCenterY };
+      }
+
+      // Proximity for lens glow (entities outside the card, near its edge)
+      function cardProximity(px, py) {
+        if (!activeCardRect) return 0;
+        const info = cardInfo(px, py);
+        if (info.inside) return 1; // inside = max glow
+        if (info.outside > LENS_RANGE) return 0;
+        return 1 - info.outside / LENS_RANGE;
+      }
+
+      function findLivableSpot(nearX, nearY, radius) {
+        for (let i = 0; i < 30; i++) {
+          const x = nearX + (Math.random() - 0.5) * radius;
+          const y = nearY + (Math.random() - 0.5) * radius;
+          const h = terrainH(x, y);
+          if (h > 0.005 && h < 0.085) return { x, y };
+        }
+        return { x: nearX, y: nearY };
+      }
+
+      function makeEntity(role, colony, townId) {
+        const town = towns.find(t => t.id === townId);
+        let sx, sy;
+        if (town && town.settlements.length) {
+          const home = town.settlements[Math.floor(Math.random() * town.settlements.length)];
+          const spot = findLivableSpot(home.x, home.y, 120);
+          sx = spot.x; sy = spot.y;
+        } else {
+          const spot = findLivableSpot(W / 2, H / 2, W);
+          sx = spot.x; sy = spot.y;
+        }
+
+        const personality = Math.random() < 0.35 ? 0.1 + Math.random() * 0.3 : 0.6 + Math.random() * 0.4;
+
+        return {
+          x: sx, y: sy,
+          vx: (Math.random() - 0.5) * 0.8, vy: (Math.random() - 0.5) * 0.8,
+          role, colony,
+          townId: townId != null ? townId : -1,
+          state: IDLE,
+          personality,
+          target: null,
+          carrying: false,
+          energy: 1,
+          alive: true,
+          respawnTimer: 0,
+          stateTimer: 0,
+          maxSpeed: role === GUARD ? 1.0 : role === SCOUT ? 1.8 : 1.2 + personality * 0.6,
+          radius: role === GUARD ? 3.5 : role === SCOUT ? 2.5 : 2.8 + (1 - personality) * 1,
+          trail: [],
+        };
+      }
+
+      function makePredator() {
+        const spot = findLivableSpot(W * Math.random(), H * Math.random(), W);
+        return {
+          x: spot.x, y: spot.y,
+          vx: (Math.random() - 0.5), vy: (Math.random() - 0.5),
+          role: PREDATOR, colony: -1,
+          state: PATROL, personality: 0.8,
+          target: null, carrying: false,
+          energy: 1, alive: true, respawnTimer: 0, stateTimer: 0,
+          maxSpeed: 2.2 + Math.random() * 0.5,
+          radius: 5 + Math.random() * 2,
+          huntCooldown: 0,
+          trail: [],
+        };
+      }
+
+      // ===== STEP =====
+      function step() {
+        decayPheromones();
+        // Regrow resources slowly
+        for (const r of resources) r.amount = Math.min(r.maxAmount, r.amount + 0.0003);
+
+        const alive = entities.filter(e => e.alive);
+        const civilians = alive.filter(e => e.role !== PREDATOR);
+        const predators = alive.filter(e => e.role === PREDATOR);
+
+        // --- CIVILIANS ---
+        for (const e of civilians) {
+          e.stateTimer++;
+          const myTown = towns.find(t => t.id === e.townId);
+          const townSettlements = myTown ? myTown.settlements : getColonySettlements(e.colony);
+          let nearHome = townSettlements[0] || { x: W / 2, y: H / 2 };
+          let nearHomeD = Infinity;
+          for (const s of townSettlements) { const d = ddist(e, s); if (d < nearHomeD) { nearHomeD = d; nearHome = s; } }
+
+          // Check for nearby predators — override to FLEE
+          let fleeing = false, fx = 0, fy = 0;
+          for (const p of predators) {
+            const d = ddist(e, p);
+            if (d < 120) {
+              const u = 1 - d / 120;
+              fx -= ((p.x - e.x) / d) * u * u;
+              fy -= ((p.y - e.y) / d) * u * u;
+              fleeing = true;
+            }
+          }
+
+          if (fleeing) {
+            e.state = FLEE;
+            e.vx += fx * 0.2; e.vy += fy * 0.2;
+          } else {
+            // State machine
+            switch (e.state) {
+              case IDLE: {
+                // Pick next objective
+                if (e.role === WORKER) {
+                  // Prefer town-local resources (70%), or any resource (30%)
+                  const townRes = myTown ? myTown.resources.filter(r => r.amount >= 0.1) : [];
+                  const allRes = resources.filter(r => r.amount >= 0.1);
+                  let pool = townRes.length > 0 && Math.random() < 0.7 ? townRes : allRes;
+                  let best = null;
+                  if (pool.length > 0) {
+                    if (Math.random() < 0.35) {
+                      best = pool[Math.floor(Math.random() * pool.length)];
+                    } else {
+                      let bestD = Infinity;
+                      for (const r of pool) { const d = ddist(e, r); if (d < bestD) { bestD = d; best = r; } }
+                    }
+                  }
+                  if (best) { e.target = best; e.state = FORAGE; }
+                  else { e.state = EXPLORE; e.target = null; }
+                } else if (e.role === SCOUT) {
+                  e.state = EXPLORE;
+                  // 50% explore random far spot, 50% travel to another town of same colony
+                  const otherTowns = towns.filter(t => t.colony === e.colony && t.id !== e.townId);
+                  if (otherTowns.length > 0 && Math.random() < 0.5) {
+                    const dest = otherTowns[Math.floor(Math.random() * otherTowns.length)];
+                    e.target = { x: dest.cx + (Math.random() - 0.5) * 60, y: dest.cy + (Math.random() - 0.5) * 60 };
+                  } else {
+                    const spot = findLivableSpot(e.x + (Math.random() - 0.5) * 800, e.y + (Math.random() - 0.5) * 800, 400);
+                    e.target = spot;
+                  }
+                } else if (e.role === GUARD) {
+                  e.state = PATROL;
+                  const angle = Math.random() * Math.PI * 2;
+                  const r = nearHome.size ? nearHome.size * 16 : 100;
+                  e.target = { x: nearHome.x + Math.cos(angle) * r, y: nearHome.y + Math.sin(angle) * r };
+                }
+                e.stateTimer = 0;
+                break;
+              }
+              case FORAGE: {
+                if (!e.target) { e.state = IDLE; break; }
+                const d = ddist(e, e.target);
+                if (d < 10) {
+                  // Collect
+                  if (e.target.amount > 0.05) {
+                    e.target.amount -= 0.05;
+                    e.carrying = true;
+                    e.state = RETURN;
+                    e.target = nearHome;
+                  } else {
+                    e.state = IDLE; // resource depleted
+                  }
+                } else {
+                  // Walk toward target, follow pheromones
+                  const dx = e.target.x - e.x, dy = e.target.y - e.y;
+                  const dist = Math.sqrt(dx * dx + dy * dy);
+                  e.vx += (dx / dist) * 0.06;
+                  e.vy += (dy / dist) * 0.06;
+                  const ph = pheromoneSteer(e.colony, e.x, e.y);
+                  e.vx += ph.x * 0.008; e.vy += ph.y * 0.008;
+                }
+                // Drop pheromone on outward trip (weaker)
+                dropPheromone(e.colony, e.x, e.y, 0.01);
+                break;
+              }
+              case RETURN: {
+                const d = ddist(e, nearHome);
+                if (d < 15) {
+                  e.carrying = false;
+                  e.state = IDLE;
+                } else {
+                  const dx = nearHome.x - e.x, dy = nearHome.y - e.y;
+                  const dist = Math.sqrt(dx * dx + dy * dy);
+                  e.vx += (dx / dist) * 0.07;
+                  e.vy += (dy / dist) * 0.07;
+                }
+                // Drop strong pheromone on return trip (the ant trail)
+                if (e.carrying) dropPheromone(e.colony, e.x, e.y, 0.04);
+                break;
+              }
+              case EXPLORE: {
+                if (e.target) {
+                  const d = ddist(e, e.target);
+                  if (d < 15 || e.stateTimer > 300) { e.state = RETURN; e.target = nearHome; break; }
+                  const dx = e.target.x - e.x, dy = e.target.y - e.y;
+                  const dist = Math.sqrt(dx * dx + dy * dy);
+                  e.vx += (dx / dist) * 0.04;
+                  e.vy += (dy / dist) * 0.04;
+                } else {
+                  e.vx += (Math.random() - 0.5) * 0.1;
+                  e.vy += (Math.random() - 0.5) * 0.1;
+                  if (e.stateTimer > 200) { e.state = IDLE; }
+                }
+                dropPheromone(e.colony, e.x, e.y, 0.005);
+                break;
+              }
+              case PATROL: {
+                if (e.target) {
+                  const d = ddist(e, e.target);
+                  if (d < 10 || e.stateTimer > 250) { e.state = IDLE; break; }
+                  const dx = e.target.x - e.x, dy = e.target.y - e.y;
+                  const dist = Math.sqrt(dx * dx + dy * dy);
+                  e.vx += (dx / dist) * 0.04;
+                  e.vy += (dy / dist) * 0.04;
+                } else { e.state = IDLE; }
+                break;
+              }
+              case FLEE: {
+                // Flee toward home
+                const dx = nearHome.x - e.x, dy = nearHome.y - e.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist > 1) { e.vx += (dx / dist) * 0.04; e.vy += (dy / dist) * 0.04; }
+                if (!fleeing) e.state = IDLE; // predator gone
+                break;
+              }
+            }
+          }
+
+          // Local avoidance — avoid nearby same-colony
+          for (const o of civilians) {
+            if (o === e) continue;
+            const d = ddist(e, o);
+            if (d < 18 && d > 0.1) {
+              e.vx -= ((o.x - e.x) / d) * 0.03;
+              e.vy -= ((o.y - e.y) / d) * 0.03;
+            }
+          }
+
+          // Glass card void — slow, inexorable pull
+          if (activeCardRect) {
+            const ci = cardInfo(e.x, e.y);
+            if (ci.inside) {
+              if (ci.toEdge > CARD_BORDER_ZONE) {
+                // DEEP INSIDE — very slow drag + rare death
+                e.vx *= 0.97; e.vy *= 0.97;
+                if (Math.random() < CARD_KILL_RATE) {
+                  e.alive = false;
+                  e.respawnTimer = 400 + Math.random() * 300;
+                }
+              } else {
+                // BORDER ZONE — occasional escape
+                if (Math.random() < 0.003) {
+                  if (Math.random() < CARD_SURVIVE_CHANCE) {
+                    e.vx = ci.nx * (2 + Math.random() * 1.5);
+                    e.vy = ci.ny * (2 + Math.random() * 1.5);
+                  }
+                }
+              }
+              // Very gentle center pull
+              const tcD = Math.sqrt(ci.toCenterX * ci.toCenterX + ci.toCenterY * ci.toCenterY);
+              if (tcD > 1) {
+                e.vx += (ci.toCenterX / tcD) * 0.008;
+                e.vy += (ci.toCenterY / tcD) * 0.008;
+              }
+            } else if (ci.outside < CARD_ATTRACT_RANGE) {
+              // OUTSIDE — slow creeping pull
+              const pull = (1 - ci.outside / CARD_ATTRACT_RANGE);
+              const force = pull * pull * 0.03;
+              const tcD = Math.sqrt(ci.toCenterX * ci.toCenterX + ci.toCenterY * ci.toCenterY);
+              if (tcD > 1) {
+                e.vx += (ci.toCenterX / tcD) * force;
+                e.vy += (ci.toCenterY / tcD) * force;
+              }
+            }
+          }
+
+          // Edge
+          if (e.x < EDGE_MARGIN) e.vx += EDGE_TURN; if (e.x > W - EDGE_MARGIN) e.vx -= EDGE_TURN;
+          if (e.y < EDGE_MARGIN) e.vy += EDGE_TURN; if (e.y > H - EDGE_MARGIN) e.vy -= EDGE_TURN;
+
+          // Damping
+          e.vx *= 0.92; e.vy *= 0.92;
+
+          // Speed clamp
+          const spd = Math.sqrt(e.vx * e.vx + e.vy * e.vy);
+          const ms = e.state === FLEE ? e.maxSpeed * 1.6 : e.maxSpeed;
+          if (spd > ms) { e.vx = (e.vx / spd) * ms; e.vy = (e.vy / spd) * ms; }
+
+          // TERRAIN CORRECTION — entities live between sea level (0) and 0.09 contour
+          const nh = terrainH(e.x + e.vx, e.y + e.vy);
+          const gr = terrainGrad(e.x, e.y);
+          const grLen = Math.sqrt(gr.gx * gr.gx + gr.gy * gr.gy);
+
+          if (nh < 0.005 || nh > 0.08) {
+            // Near boundary — project velocity onto contour tangent (slide along, not into)
+            if (grLen > 0.0001) {
+              const nx = gr.gx / grLen, ny = gr.gy / grLen; // normal (uphill)
+              // Tangent: perpendicular to gradient
+              const tx = -ny, ty = nx;
+              // Project velocity onto tangent — keep movement parallel to contour
+              const dot = e.vx * tx + e.vy * ty;
+              e.vx = tx * dot * 0.85;
+              e.vy = ty * dot * 0.85;
+              // Add gentle push away from boundary
+              const sign = nh < 0.005 ? 1 : -1;
+              const push = nh < 0.005 ? (0.005 - nh) * 40 : (nh - 0.08) * 40;
+              e.vx += nx * sign * push;
+              e.vy += ny * sign * push;
+            }
+          }
+
+          e.x += e.vx; e.y += e.vy;
+
+          // Hard constraint — if still out of bounds, undo and slide along contour
+          const hp = terrainH(e.x, e.y);
+          if (hp < 0.0 || hp > 0.09) {
+            e.x -= e.vx; e.y -= e.vy;
+            // Slide along the contour tangent
+            const g = terrainGrad(e.x, e.y);
+            const gl = Math.sqrt(g.gx * g.gx + g.gy * g.gy);
+            if (gl > 0.0001) {
+              const tx = -g.gy / gl, ty = g.gx / gl;
+              const slide = e.vx * tx + e.vy * ty;
+              e.x += tx * slide * 0.5;
+              e.y += ty * slide * 0.5;
+              e.vx = tx * slide * 0.4;
+              e.vy = ty * slide * 0.4;
+            } else {
+              e.vx *= 0.1; e.vy *= 0.1;
+            }
+          }
+          // Teleport rescue
+          const hf = terrainH(e.x, e.y);
+          if (hf < -0.005 || hf > 0.095) {
+            const spot = findLivableSpot(nearHome.x, nearHome.y, 150);
+            e.x = spot.x; e.y = spot.y; e.vx = 0; e.vy = 0;
+          }
+
+          e.trail.push({ x: e.x, y: e.y }); if (e.trail.length > 8) e.trail.shift();
+        }
+
+        // --- PREDATORS ---
+        for (const p of predators) {
+          p.stateTimer++;
+          if (p.huntCooldown > 0) p.huntCooldown--;
+
+          // Find nearest civilian
+          let closest = null, closestD = Infinity;
+          for (const c of civilians) { const d = ddist(p, c); if (d < 200 && d < closestD) { closest = c; closestD = d; } }
+
+          if (closest && p.huntCooldown === 0) {
+            p.state = HUNT;
+            const dx = closest.x - p.x, dy = closest.y - p.y, d = closestD;
+            p.vx += (dx / d) * 0.12; p.vy += (dy / d) * 0.12;
+            if (d < 12) {
+              closest.alive = false; closest.respawnTimer = 250 + Math.random() * 150;
+              p.energy = Math.min(1, p.energy + 0.3); p.huntCooldown = 80;
+              p.state = REST; p.stateTimer = 0;
+            }
+          } else if (p.state === REST && p.stateTimer < 60) {
+            p.vx *= 0.9; p.vy *= 0.9; // resting
+          } else {
+            p.state = PATROL;
+            p.vx += (Math.random() - 0.5) * 0.1; p.vy += (Math.random() - 0.5) * 0.1;
+          }
+
+          // Predator separation
+          for (const o of predators) {
+            if (o === p) continue;
+            const d = ddist(p, o);
+            if (d < 100 && d > 0.1) { p.vx -= ((o.x - p.x) / d) * 0.04; p.vy -= ((o.y - p.y) / d) * 0.04; }
+          }
+
+          // Glass card void — predators, same slow pull
+          if (activeCardRect) {
+            const ci = cardInfo(p.x, p.y);
+            if (ci.inside) {
+              p.vx *= 0.97; p.vy *= 0.97;
+              if (ci.toEdge > CARD_BORDER_ZONE && Math.random() < CARD_KILL_RATE * 0.5) {
+                p.alive = false; p.respawnTimer = 600;
+              }
+              const tcD = Math.sqrt(ci.toCenterX * ci.toCenterX + ci.toCenterY * ci.toCenterY);
+              if (tcD > 1) { p.vx += (ci.toCenterX / tcD) * 0.008; p.vy += (ci.toCenterY / tcD) * 0.008; }
+            } else if (ci.outside < CARD_ATTRACT_RANGE) {
+              const pull = (1 - ci.outside / CARD_ATTRACT_RANGE);
+              const force = pull * pull * 0.025;
+              const tcD = Math.sqrt(ci.toCenterX * ci.toCenterX + ci.toCenterY * ci.toCenterY);
+              if (tcD > 1) { p.vx += (ci.toCenterX / tcD) * force; p.vy += (ci.toCenterY / tcD) * force; }
+            }
+          }
+
+          if (p.x < EDGE_MARGIN) p.vx += EDGE_TURN; if (p.x > W - EDGE_MARGIN) p.vx -= EDGE_TURN;
+          if (p.y < EDGE_MARGIN) p.vy += EDGE_TURN; if (p.y > H - EDGE_MARGIN) p.vy -= EDGE_TURN;
+
+          p.vx *= 0.94; p.vy *= 0.94;
+          const spd = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          if (spd > p.maxSpeed) { p.vx = (p.vx / spd) * p.maxSpeed; p.vy = (p.vy / spd) * p.maxSpeed; }
+
+          // Terrain — predators respect sea level (0) and 0.12 contour
+          const nh = terrainH(p.x + p.vx, p.y + p.vy);
+          const pgr = terrainGrad(p.x, p.y);
+          const pgl = Math.sqrt(pgr.gx * pgr.gx + pgr.gy * pgr.gy);
+
+          if (nh < 0.005 || nh > 0.11) {
+            if (pgl > 0.0001) {
+              const nx = pgr.gx / pgl, ny = pgr.gy / pgl;
+              const tx = -ny, ty = nx;
+              const dot = p.vx * tx + p.vy * ty;
+              p.vx = tx * dot * 0.85;
+              p.vy = ty * dot * 0.85;
+              const sign = nh < 0.005 ? 1 : -1;
+              const push = nh < 0.005 ? (0.005 - nh) * 35 : (nh - 0.11) * 35;
+              p.vx += nx * sign * push;
+              p.vy += ny * sign * push;
+            }
+          }
+
+          p.x += p.vx; p.y += p.vy;
+
+          const hp = terrainH(p.x, p.y);
+          if (hp < 0.0 || hp > 0.12) {
+            p.x -= p.vx; p.y -= p.vy;
+            const g = terrainGrad(p.x, p.y);
+            const gl = Math.sqrt(g.gx * g.gx + g.gy * g.gy);
+            if (gl > 0.0001) {
+              const tx = -g.gy / gl, ty = g.gx / gl;
+              const slide = p.vx * tx + p.vy * ty;
+              p.x += tx * slide * 0.5;
+              p.y += ty * slide * 0.5;
+              p.vx = tx * slide * 0.4;
+              p.vy = ty * slide * 0.4;
+            } else {
+              p.vx *= 0.1; p.vy *= 0.1;
+            }
+          }
+          const hf = terrainH(p.x, p.y);
+          if (hf < -0.005 || hf > 0.125) {
+            const spot = findLivableSpot(W / 2, H / 2, W);
+            p.x = spot.x; p.y = spot.y; p.vx = 0; p.vy = 0;
+          }
+
+          p.energy = Math.max(0.2, p.energy - 0.0004);
+          p.trail.push({ x: p.x, y: p.y }); if (p.trail.length > 14) p.trail.shift();
+        }
+
+        // ===== POPULATION DYNAMICS =====
+        const MAX_POP = 350; // hard cap
+        const MIN_POP = 60;  // minimum — births accelerate below this
+        const CARRYING_PER_TOWN = 30; // soft cap per town
+        const aliveCivs = entities.filter(e => e.alive && e.role !== PREDATOR);
+        const totalPop = aliveCivs.length;
+
+        // --- Respawn dead (reincarnation — faster when pop is low) ---
+        for (const e of entities) {
+          if (!e.alive && e.role !== PREDATOR) {
+            e.respawnTimer--;
+            const urgency = totalPop < MIN_POP ? 3 : 1; // faster respawn when underpopulated
+            e.respawnTimer -= (urgency - 1);
+            if (e.respawnTimer <= 0) {
+              e.alive = true;
+              const myT = towns.find(t => t.id === e.townId);
+              const homes = myT ? myT.settlements : getColonySettlements(e.colony);
+              const home = homes.length ? homes[Math.floor(Math.random() * homes.length)] : { x: W / 2, y: H / 2 };
+              const spot = findLivableSpot(home.x, home.y, 100);
+              e.x = spot.x; e.y = spot.y;
+              e.vx = 0; e.vy = 0; e.state = IDLE; e.carrying = false; e.trail = [];
+            }
+          }
+        }
+
+        // --- Procreation: two nearby same-colony entities at home can birth a new entity ---
+        if (totalPop < MAX_POP && Math.random() < 0.008) { // ~0.8% chance per frame
+          // Pick a random alive civilian who just returned home (IDLE state, near settlement)
+          const candidates = aliveCivs.filter(e => e.state === IDLE && !e.carrying);
+          if (candidates.length > 1) {
+            const parent = candidates[Math.floor(Math.random() * candidates.length)];
+            const myT = towns.find(t => t.id === parent.townId);
+            const townPop = aliveCivs.filter(e => e.townId === parent.townId).length;
+
+            // Only procreate if town is below carrying capacity
+            if (townPop < CARRYING_PER_TOWN) {
+              // Find a mate — nearby same-colony entity also idle
+              const mate = candidates.find(e =>
+                e !== parent &&
+                e.colony === parent.colony &&
+                e.townId === parent.townId &&
+                ddist(e, parent) < 40
+              );
+
+              if (mate) {
+                // Birth! New entity between parent and mate
+                const bx = (parent.x + mate.x) / 2 + (Math.random() - 0.5) * 10;
+                const by = (parent.y + mate.y) / 2 + (Math.random() - 0.5) * 10;
+
+                // Role distribution: 60% worker, 25% scout, 15% guard
+                const roll = Math.random();
+                const role = roll < 0.60 ? WORKER : roll < 0.85 ? SCOUT : GUARD;
+
+                const child = makeEntity(role, parent.colony, parent.townId);
+                child.x = bx; child.y = by;
+                child.radius *= 0.7; // born small
+                child.maxSpeed *= 0.8; // born slow
+                // Grow over time
+                child._growTimer = 300; // frames to reach full size
+                child._baseRadius = child.radius / 0.7;
+                child._baseSpeed = child.maxSpeed / 0.8;
+                entities.push(child);
+              }
+            }
+          }
+        }
+
+        // --- Natural death: old age / starvation when town is overcrowded ---
+        if (totalPop > MIN_POP && Math.random() < 0.003) {
+          // Higher death rate when overpopulated
+          const deathChance = totalPop > MAX_POP * 0.8 ? 0.02 : 0.003;
+          if (Math.random() < deathChance) {
+            // Pick a random alive civilian
+            const victim = aliveCivs[Math.floor(Math.random() * aliveCivs.length)];
+            const townPop = aliveCivs.filter(e => e.townId === victim.townId).length;
+            // More likely to die in overcrowded towns
+            if (townPop > CARRYING_PER_TOWN * 1.2 || Math.random() < 0.3) {
+              victim.alive = false;
+              victim.respawnTimer = 400 + Math.random() * 300; // slow respawn for natural death
+            }
+          }
+        }
+
+        // --- Growth: children mature over time ---
+        for (const e of entities) {
+          if (e._growTimer > 0) {
+            e._growTimer--;
+            const progress = 1 - e._growTimer / 300;
+            e.radius = e._baseRadius * (0.7 + progress * 0.3);
+            e.maxSpeed = e._baseSpeed * (0.8 + progress * 0.2);
+            if (e._growTimer <= 0) {
+              e.radius = e._baseRadius;
+              e.maxSpeed = e._baseSpeed;
+              delete e._growTimer;
+              delete e._baseRadius;
+              delete e._baseSpeed;
+            }
+          }
+        }
+
+        // --- Predator population: reproduce if well-fed, starve if not ---
+        const alivePreds = entities.filter(e => e.alive && e.role === PREDATOR);
+        // Predator birth — rare, only if energy is high
+        if (alivePreds.length < 10 && Math.random() < 0.002) {
+          const fatPred = alivePreds.find(p => p.energy > 0.8);
+          if (fatPred) {
+            const child = makePredator();
+            child.x = fatPred.x + (Math.random() - 0.5) * 30;
+            child.y = fatPred.y + (Math.random() - 0.5) * 30;
+            child.radius *= 0.7;
+            child.maxSpeed *= 0.8;
+            child._growTimer = 200;
+            child._baseRadius = child.radius / 0.7;
+            child._baseSpeed = child.maxSpeed / 0.8;
+            fatPred.energy -= 0.4; // birth costs energy
+            entities.push(child);
+          }
+        }
+        // Predator starvation
+        for (const p of alivePreds) {
+          if (p.energy <= 0.2 && Math.random() < 0.001) {
+            p.alive = false;
+            p.respawnTimer = 600;
+          }
+        }
+
+        // Card pulse timer
+        if (activeCardRect) cardPulse += 0.015;
+        else cardPulse *= 0.95; // fade out
+      }
+
+      // ===== DRAW =====
+      function drawWorld() {
+        wCtx.clearRect(0, 0, W, H);
+        const isLight = document.documentElement.classList.contains('light');
+
+        function colonyColor(col, a) {
+          const hue = COLONY_HUES[col] || 0;
+          return isLight ? `hsla(${hue},30%,35%,${a})` : `hsla(${hue},25%,75%,${a})`;
+        }
+        function predColor(a) { return isLight ? `rgba(180,40,40,${a})` : `rgba(255,100,80,${a})`; }
+        function resColor(a) { return isLight ? `rgba(40,120,40,${a})` : `rgba(120,220,80,${a})`; }
+
+        // Helper: is point near/inside the active card? Skip drawing there.
+        function nearCard(px, py, margin) {
+          if (!activeCardRect) return false;
+          const r = activeCardRect;
+          return px > r.x - margin && px < r.x + r.w + margin &&
+                 py > r.y - margin && py < r.y + r.h + margin;
+        }
+
+        // --- Pheromone trails --- (skip near card)
+        for (let col = 0; col < COLONY_COUNT; col++) {
+          for (let r = 0; r < pheroH; r++) {
+            for (let c = 0; c < pheroW; c++) {
+              const v = pheromones[col][r][c];
+              if (v > 0.02) {
+                const px = c * PHERO_RES, py = r * PHERO_RES;
+                if (nearCard(px, py, 30)) continue;
+                wCtx.fillStyle = colonyColor(col, v * 0.25);
+                wCtx.fillRect(px, py, PHERO_RES, PHERO_RES);
+              }
+            }
+          }
+        }
+
+        // --- Resources --- (skip near card)
+        for (const r of resources) {
+          if (r.amount < 0.05) continue;
+          if (nearCard(r.x, r.y, 30)) continue;
+          const size = 3 + r.amount * 5;
+          wCtx.fillStyle = resColor(0.15 + r.amount * 0.3);
+          wCtx.beginPath(); wCtx.arc(r.x, r.y, size, 0, Math.PI * 2); wCtx.fill();
+          // Small glow
+          wCtx.fillStyle = resColor(0.05);
+          wCtx.beginPath(); wCtx.arc(r.x, r.y, size * 2.5, 0, Math.PI * 2); wCtx.fill();
+        }
+
+        const alive = entities.filter(e => e.alive);
+        const civs = alive.filter(e => e.role !== PREDATOR);
+        const preds = alive.filter(e => e.role === PREDATOR);
+
+        // --- Network mesh — town-local sub-networks ---
+        wCtx.lineWidth = 0.5;
+        for (let i = 0; i < civs.length; i++) {
+          const a = civs[i];
+          for (let j = i + 1; j < civs.length; j++) {
+            const b = civs[j];
+            const d = ddist(a, b);
+            const sameTown = a.townId === b.townId && a.townId >= 0;
+            const sameColony = a.colony === b.colony;
+
+            // Strong mesh within same town, weaker between towns of same colony, faint cross-colony
+            let maxRange, alphaScale;
+            if (sameTown) { maxRange = 100; alphaScale = 0.18; }
+            else if (sameColony) { maxRange = 50; alphaScale = 0.06; }
+            else { maxRange = 35; alphaScale = 0.03; }
+
+            if (d < maxRange) {
+              // Skip connections near card
+              const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+              if (nearCard(mx, my, 50)) continue;
+              const alpha = (1 - d / maxRange) * alphaScale;
+              wCtx.lineWidth = 0.5;
+              wCtx.strokeStyle = colonyColor(a.colony, alpha);
+              wCtx.beginPath(); wCtx.moveTo(a.x, a.y); wCtx.lineTo(b.x, b.y); wCtx.stroke();
+            }
+          }
+        }
+
+
+        // --- Civilian trails --- (skip near card)
+        for (const e of civs) {
+          if (e.trail.length < 2) continue;
+          if (nearCard(e.x, e.y, 20)) continue;
+          wCtx.lineWidth = e.radius * 0.4;
+          for (let t = 1; t < e.trail.length; t++) {
+            wCtx.strokeStyle = colonyColor(e.colony, (t / e.trail.length) * 0.08);
+            wCtx.beginPath(); wCtx.moveTo(e.trail[t-1].x, e.trail[t-1].y); wCtx.lineTo(e.trail[t].x, e.trail[t].y); wCtx.stroke();
+          }
+        }
+
+        // --- Civilians ---
+        for (const e of civs) {
+          const spd = Math.sqrt(e.vx * e.vx + e.vy * e.vy);
+          let alpha = 0.3 + spd / e.maxSpeed * 0.3;
+          let r = e.radius;
+
+          // Slow sink: _sinkDepth lerps toward actual depth, controls size + fade
+          if (activeCardRect) {
+            const ci = cardInfo(e.x, e.y);
+            if (ci.inside) {
+              const halfMin = Math.min(activeCardRect.w, activeCardRect.h) * 0.5;
+              const targetDepth = Math.max(0, 1 - ci.toEdge / halfMin);
+              e._sinkDepth = (e._sinkDepth || 0) + (targetDepth - (e._sinkDepth || 0)) * 0.015;
+            } else {
+              e._sinkDepth = (e._sinkDepth || 0) * 0.97; // slowly recover outside
+            }
+          } else {
+            e._sinkDepth = (e._sinkDepth || 0) * 0.95; // ease back when unhovered
+          }
+          if (e._sinkDepth > 0.005) {
+            const sd = e._sinkDepth;
+            r *= 1 + sd * 2.5;
+            alpha *= 1 - sd * 0.7; // fade to 30% at full depth then disappear
+            if (sd > 0.95) alpha = 0; // fully consumed — invisible
+          }
+
+          // Carrying indicator — brighter/larger
+          if (e.carrying) { alpha += 0.2; r *= 1.3; }
+          // Guard glow
+          if (e.role === GUARD) {
+            wCtx.fillStyle = colonyColor(e.colony, alpha * 0.08);
+            wCtx.beginPath(); wCtx.arc(e.x, e.y, r * 3, 0, Math.PI * 2); wCtx.fill();
+          }
+          // Scout — diamond shape
+          if (e.role === SCOUT) {
+            wCtx.fillStyle = colonyColor(e.colony, alpha);
+            wCtx.beginPath();
+            wCtx.moveTo(e.x, e.y - r * 1.3); wCtx.lineTo(e.x + r, e.y);
+            wCtx.lineTo(e.x, e.y + r * 1.3); wCtx.lineTo(e.x - r, e.y);
+            wCtx.closePath(); wCtx.fill();
+          } else {
+            wCtx.fillStyle = colonyColor(e.colony, alpha);
+            wCtx.beginPath(); wCtx.arc(e.x, e.y, r, 0, Math.PI * 2); wCtx.fill();
+          }
+
+          // Direction line when moving
+          if (spd > 0.3) {
+            const nx = e.vx / spd, ny = e.vy / spd;
+            wCtx.strokeStyle = colonyColor(e.colony, alpha * 0.3);
+            wCtx.lineWidth = 0.8;
+            wCtx.beginPath(); wCtx.moveTo(e.x, e.y); wCtx.lineTo(e.x + nx * r * 2.5, e.y + ny * r * 2.5); wCtx.stroke();
+          }
+        }
+
+        // --- Predator trails --- (skip near card)
+        for (const p of preds) {
+          if (p.trail.length < 2) continue;
+          if (nearCard(p.x, p.y, 20)) continue;
+          wCtx.lineWidth = 1.5;
+          for (let t = 1; t < p.trail.length; t++) {
+            wCtx.strokeStyle = predColor((t / p.trail.length) * 0.12 * p.energy);
+            wCtx.beginPath(); wCtx.moveTo(p.trail[t-1].x, p.trail[t-1].y); wCtx.lineTo(p.trail[t].x, p.trail[t].y); wCtx.stroke();
+          }
+        }
+
+        // --- Predators ---
+        for (const p of preds) {
+          let alpha = 0.4 + p.energy * 0.4;
+          let pr = p.radius;
+
+          // Slow sink for predators
+          if (activeCardRect) {
+            const ci = cardInfo(p.x, p.y);
+            if (ci.inside) {
+              const halfMin = Math.min(activeCardRect.w, activeCardRect.h) * 0.5;
+              const targetDepth = Math.max(0, 1 - ci.toEdge / halfMin);
+              p._sinkDepth = (p._sinkDepth || 0) + (targetDepth - (p._sinkDepth || 0)) * 0.012;
+            } else {
+              p._sinkDepth = (p._sinkDepth || 0) * 0.97;
+            }
+          } else {
+            p._sinkDepth = (p._sinkDepth || 0) * 0.95;
+          }
+          if (p._sinkDepth > 0.005) {
+            const sd = p._sinkDepth;
+            pr *= 1 + sd * 2.5;
+            alpha *= 1 - sd * 0.7;
+            if (sd > 0.95) alpha = 0;
+          }
+
+          wCtx.fillStyle = predColor(alpha * 0.06); wCtx.beginPath(); wCtx.arc(p.x, p.y, pr * 4, 0, Math.PI * 2); wCtx.fill();
+          wCtx.fillStyle = predColor(alpha * 0.15); wCtx.beginPath(); wCtx.arc(p.x, p.y, pr * 2, 0, Math.PI * 2); wCtx.fill();
+          wCtx.fillStyle = predColor(alpha); wCtx.beginPath(); wCtx.arc(p.x, p.y, pr, 0, Math.PI * 2); wCtx.fill();
+          const spd = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          if (spd > 0.4) {
+            wCtx.strokeStyle = predColor(alpha * 0.4); wCtx.lineWidth = 1.5;
+            wCtx.beginPath(); wCtx.moveTo(p.x, p.y); wCtx.lineTo(p.x + (p.vx / spd) * pr * 3, p.y + (p.vy / spd) * pr * 3); wCtx.stroke();
+          }
+        }
+      }
+
+      // ===== RESIZE =====
+      function resize() {
+        dpr = window.devicePixelRatio || 1;
+        W = window.innerWidth; H = window.innerHeight;
+        for (const c of [tCanvas, oCanvas, wCanvas]) {
+          c.width = W * dpr; c.height = H * dpr;
+          c.style.width = W + 'px'; c.style.height = H + 'px';
+        }
+        tCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        oCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        wCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        sampleTerrain();
+        placeResources();
+        buildTowns();
+        initPheromones();
+        drawTerrain();
+      }
+
+      function loop() { step(); drawOcean(); drawCardTerrain(); drawWorld(); requestAnimationFrame(loop); }
+
+      // Init
+      resize();
+      buildTowns();
+
+      // Distribute population evenly across towns of each colony
+      for (let col = 0; col < COLONY_COUNT; col++) {
+        const colTowns = towns.filter(t => t.colony === col);
+        if (colTowns.length === 0) continue;
+        const perTown = Math.floor(POP_PER_COLONY / colTowns.length);
+        const remainder = POP_PER_COLONY - perTown * colTowns.length;
+
+        for (let ti = 0; ti < colTowns.length; ti++) {
+          const pop = perTown + (ti < remainder ? 1 : 0);
+          const workers = Math.floor(pop * 0.55);
+          const scouts = Math.floor(pop * 0.2);
+          const guards = pop - workers - scouts;
+          for (let i = 0; i < workers; i++) entities.push(makeEntity(WORKER, col, colTowns[ti].id));
+          for (let i = 0; i < scouts; i++) entities.push(makeEntity(SCOUT, col, colTowns[ti].id));
+          for (let i = 0; i < guards; i++) entities.push(makeEntity(GUARD, col, colTowns[ti].id));
+        }
+      }
+      for (let i = 0; i < PREDATOR_COUNT; i++) entities.push(makePredator());
+
+      // Card void pulse initialized in shared state above
+
+      window.addEventListener('resize', resize);
+      const obs = new MutationObserver(() => drawTerrain());
+      obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+      // Glass card hover tracking — translate card DOM rect to world coords
+      // Cards are inside .panel-inner inside .panel inside .track
+      // Track is translated by -currentX, so card world pos = card.getBoundingClientRect() offset by scroll
+      document.querySelectorAll('.product-glass').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          const r = card.getBoundingClientRect();
+          activeCardRect = { x: r.left, y: r.top, w: r.width, h: r.height };
+        });
+        card.addEventListener('mousemove', () => {
+          const r = card.getBoundingClientRect();
+          activeCardRect = { x: r.left, y: r.top, w: r.width, h: r.height };
+        });
+        card.addEventListener('mouseleave', () => {
+          activeCardRect = null;
+        });
+      });
+
+      requestAnimationFrame(loop);
+    })();
+  </script>
+
+</body>
+</html>

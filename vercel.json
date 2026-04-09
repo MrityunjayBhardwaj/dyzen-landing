@@ -1,0 +1,34 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "dyzen.io" }],
+      "destination": "https://dyzen.ai/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.dyzen.io" }],
+      "destination": "https://dyzen.ai/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "dyzenlabs.com" }],
+      "destination": "https://dyzen.ai/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.dyzenlabs.com" }],
+      "destination": "https://dyzen.ai/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.dyzen.ai" }],
+      "destination": "https://dyzen.ai/:path*",
+      "permanent": true
+    }
+  ]
+}
